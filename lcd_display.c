@@ -10,5 +10,7 @@ void initDisplay(void) {
 
 
 void displayString(char *string) {
+	lcd_clear_display();
+	
 	lcd_write_string(string, 0, 0);
 }
