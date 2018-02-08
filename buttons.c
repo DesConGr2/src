@@ -1,11 +1,12 @@
 #include "buttons.h"
+
 #include "SWT.h"
 
-void initButtons() {
+void initButtons(void) {
 	SWT_Init();
 }
 
-int getButtonPressed() {
+int getButtonPressed(void) {
 	// Get the data from the relevant GPIO register 
 	int buttons = SWT_Get();
 

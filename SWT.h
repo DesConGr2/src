@@ -16,8 +16,11 @@
 #ifndef __SWT_H
 #define __SWT_H
 
+#include <stdint.h>
+
 /* SWT Definitions */
 #define SWT_NUM     8                        /* Number of user Switches       */
+
 
 extern void SWT_Init(void);
 extern uint32_t SWT_Get (void);

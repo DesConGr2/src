@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "ADC.h"
-#include "lcd_display.h"
+#include "lcdDisplay.h"
 #include "buttons.h"
 
 	 
@@ -35,11 +35,7 @@ int main (void) {
   
 
   while(1) {                                                                   		
-		// display which button has been pressed
-		sprintf(dispVal, "%i", getButtonPressed());
-	
-		displayString(dispVal);
-		
+		displayInt(getButtonPressed());
 		// TODO: figure out how to sleep the thread
 	}
 	
