@@ -45,9 +45,9 @@ unsigned int readADC1 (void) {
 
 /* Function to intiialise ADC2    */
 
-void ADC2_init(void) {
+void ADC2Init(void) {
 	/* Enable clocks */
-	RCC->APB2ENR  |= RCC_APB2ENR_ADC1EN;
+	RCC->APB2ENR  |= RCC_APB2ENR_ADC2EN;
 	RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOCEN;
 	
 	/* ADC12_IN15 is the channel we shall use. It is connected to 
@@ -61,7 +61,7 @@ void ADC2_init(void) {
 	
 	/* Ensure CR2 is set to zero. This means data will be right aligned, 
 	 * DMA is disabled and there are no extrnal triggers/injected channels */
-	ADC2->CR2 = 0x00;
+	ADC2->CR2 = 0x11;
 	
 	/* Set to one conversion at a time, and set that first conversion 
 	 * to come from channel 15 (connected to PC5) */
@@ -73,7 +73,7 @@ void ADC2_init(void) {
 }
 	
 /* function to read ADC and retun value */
-unsigned int read_ADC2 (void) {
+unsigned int readADC2(void) {
 	/* set SWSTART to 1 to start conversion */
 	ADC2->CR2 |= ADC_CR2_SWSTART;
 	
@@ -82,4 +82,13 @@ unsigned int read_ADC2 (void) {
 	
 	/* Return data value */
 	return (ADC2->DR);
+}
+
+volatile int msTicks;  
+
+void Wait(int dlyTicks) {                                              
+  int curTicks;
+
+  curTicks = msTicks;
+  while ((msTicks - curTicks) < dlyTicks);
 }
