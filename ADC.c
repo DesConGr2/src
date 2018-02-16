@@ -32,7 +32,7 @@ void ADC1Init(void) {
 }
 	
 /* function to read ADC and retun value */
-unsigned int readADC1 (void) {
+unsigned int ADC1value (void) {
 	/* set SWSTART to 1 to start conversion */
 	ADC1->CR2 |= ADC_CR2_SWSTART;
 	
@@ -42,6 +42,16 @@ unsigned int readADC1 (void) {
 	/* Return data value */
 	return (ADC1->DR);
 }
+
+ double readADC1(void) {
+	int value = 0; 
+	double returnValue;
+	value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	value = (value << 4) & 0xFF00; 
+	returnValue = ((double)value)/19487;
+	return (returnValue);
+}
+	
 
 /* Function to intiialise ADC2    */
 
@@ -73,7 +83,7 @@ void ADC2Init(void) {
 }
 	
 /* function to read ADC and retun value */
-unsigned int readADC2(void) {
+unsigned int ADC2value (void) {
 	/* set SWSTART to 1 to start conversion */
 	ADC2->CR2 |= ADC_CR2_SWSTART;
 	
@@ -83,6 +93,16 @@ unsigned int readADC2(void) {
 	/* Return data value */
 	return (ADC2->DR);
 }
+
+ double readADC2(void) {
+	int value = 0; 
+	double returnValue;
+	value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	value = (value << 4) & 0xFF00; 
+	returnValue = ((double)value)/3327;
+	return (returnValue);
+}
+
 
 volatile int msTicks;  
 
