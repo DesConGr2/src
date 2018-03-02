@@ -43,7 +43,6 @@ int setPin(int pin, int val) {
 	}
 }
 
-
 int readPin(int pin) {
 	if((pin < 4) || (pin == 6) || ((pin > 8) && (pin < 15)) || (pin > 15)) {
 		// The desired pin is not valid
