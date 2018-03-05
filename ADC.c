@@ -104,11 +104,11 @@ unsigned int ADC2value (void) {
 }
 
 
-volatile int msTicks;  
+//volatile int msTicks;  
 
-void Wait(int dlyTicks) {                                              
-  int curTicks;
+//void Wait(int dlyTicks) {                                              
+//  int curTicks;
 
-  curTicks = msTicks;
-  while ((msTicks - curTicks) < dlyTicks);
-}
+//  curTicks = msTicks;
+//  while ((msTicks - curTicks) < dlyTicks);
+//}
