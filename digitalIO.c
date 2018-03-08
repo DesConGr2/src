@@ -37,7 +37,7 @@ int setPin(int pin, int val) {
 	}
 	else {
 		// Set the bit on the pin low
-		GPIOE->ODR ^= output;
+		GPIOE->ODR &= ~output;
 		// Return with a success code
 		return 1;
 	}

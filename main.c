@@ -21,8 +21,9 @@ int main (void) {
 
 
 	int range = 3;
+	setRange(range);
 	autoRange(&range);
-
+	
 
 	while(1) {}
 }

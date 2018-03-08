@@ -31,6 +31,7 @@ void setRange(int range) {
 	}
 }
 
+// NOTE currently only ranges down, talk to harry about ranging up
 void autoRange(int *range) {	
 	// @Warning: there might be an issue to do with the speed that this while loop works at, the hardware may
 	// not be able to keep up. A delay might need to be included.
