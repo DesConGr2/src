@@ -102,3 +102,4 @@ unsigned int ADC2value (void) {
 	returnValue = ((double)value)/3327;
 	return (returnValue);
 }
+
