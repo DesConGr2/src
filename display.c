@@ -83,6 +83,7 @@ int main (void) {
 	initDigitalIO();
 	ADC1Init();
 	
+	//Wlecome message (tests screen)
 	displayType("Welcome!");
 	Delay(1000);
 	displayClear();
@@ -140,20 +141,32 @@ int main (void) {
 		//display resolution
 		switch(TYPindex){
 			case 0:
+				//Display the range (resolution)
 				displayRange(VRANGE[RNGindex]);
+			
+				//---- Code for displaying the reading ----//
+				displayReading(readADC1());
+				//-----------------------------------------//
 			break;
 			
 			case 1:
+				//Display the range (resolution)
 				displayRange(ARANGE[RNGindex]);
+			
+				//---- Code for displaying the reading ----//
+				displayReading(readADC1());
+				//-----------------------------------------//
 			break;
 			
 			case 2:
+				//Display the range (resolution)
 				displayRange(RRANGE[RNGindex]);
+			
+				//---- Code for displaying the reading ----//
+				displayReading(readADC1());
+				//-----------------------------------------//
 			break;
 		}
-		
-		//display reading
-		displayReading(readADC1());
 	}
 				
 }
