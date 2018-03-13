@@ -44,7 +44,10 @@ void autoRange(int *range) {
 		if(val < 0.3) {
 			(*range)--;	
 			setRange(*range);
-		}	
+		}	else if(val > 3.1) {
+			(*range)++;
+			setRange(*range);
+		}
 	}
 }
 
