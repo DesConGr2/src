@@ -23,6 +23,7 @@
 #include "lcdDisplay.h"
 #include "buttons.h"
 #include "digitalIO.h"
+#include "MathsFunctions.h"
 
 
 volatile uint32_t msTicks;                      /* counts 1ms timeTicks       */
@@ -72,7 +73,7 @@ int main (void) {
 	
 	//Define the arrays for the user options
 	char *RDTYPE[3] = {"V  ", "A  ", "Ohm"};
-	double VRANGE[3] = {10, 1, 0.1};
+	double VRANGE[3] = {12, 1, 0.1};
 	double ARANGE[3] = {1, 0.1, 0.01};
 	double RRANGE[3] = {1, 10, 100};
 	int TYPindex = 0, RNGindex = 0;
@@ -145,7 +146,19 @@ int main (void) {
 				displayRange(VRANGE[RNGindex]);
 			
 				//---- Code for displaying the reading ----//
-				displayReading(readADC1());
+				switch(RNGindex){
+					case 0:
+							displayReading(range12());
+					break;
+					
+					case 1:
+						displayReading(range1());
+					break;
+					
+					case 2:
+						displayReading(range100m());
+					break;
+				}
 				//-----------------------------------------//
 			break;
 			
