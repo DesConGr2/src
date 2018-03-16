@@ -37,12 +37,11 @@ int setPin(int pin, int val) {
 	}
 	else {
 		// Set the bit on the pin low
-		GPIOE->ODR ^= output;
+		GPIOE->ODR &= ~output;
 		// Return with a success code
 		return 1;
 	}
 }
-
 
 int readPin(int pin) {
 	if((pin < 4) || (pin == 6) || ((pin > 8) && (pin < 15)) || (pin > 15)) {

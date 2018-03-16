@@ -17,8 +17,4 @@
 	//voltage value at ADC2
 	double readADC2(void) ;
 	
-	void wait(int dlyTicks);
-	
-	
-	
 #endif

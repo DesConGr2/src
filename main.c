@@ -6,31 +6,28 @@
 #include "lcdDisplay.h"
 #include "buttons.h"
 #include "digitalIO.h"
+#include "ranging.h"
 
 
 
 int main (void) {
-  // GPIOD/A/B clocks setup in this
+	// GPIOD/A/B clocks setup in this
 	initDisplay();  
 	// GPIOE clock set up in this
-  initButtons();	
+	initButtons();	
 	
 	initDigitalIO();
+
+
+
+	int range = 3;
+	setRange(range);
+	autoRange(&range);
 	
-	// Write to J7 pin 7
-	setPin(7, 1);
-	int readVal = 0;
-  while(1) {                                                                   		
-		// Read from J5 pin 4 and display
-		readVal = readPin(4);
-		
-		if(readVal == -1) {
-		displayString("Error");
-		} else {
-			displayInt(readVal);
-		}
-		
-	}
+
+	while(1) {}
 }
+
+
 
 

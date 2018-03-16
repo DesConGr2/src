@@ -4,9 +4,13 @@
 // Initialise the LCD display
 void initDisplay(void);
 // Display a string on the LCD display
-void displayString(char *string);
+void displayType(char *string);
+void displayStringRange(char *string);
+void displayReading(double value);
+void displayClear(void);
 // Display an integer value on the LCD display
-void displayInt(int value);
+//void displayInt(int value);
+void displayRange(double value);
 
 
 #endif

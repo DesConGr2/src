@@ -103,12 +103,3 @@ unsigned int ADC2value (void) {
 	return (returnValue);
 }
 
-
-volatile int msTicks;  
-
-void Wait(int dlyTicks) {                                              
-  int curTicks;
-
-  curTicks = msTicks;
-  while ((msTicks - curTicks) < dlyTicks);
-}
