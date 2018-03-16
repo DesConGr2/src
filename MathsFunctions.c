@@ -31,7 +31,8 @@ double range100m(void){
 
 double range1m(void){
 	
-	returnValue = (0.66666666666667*ADCvalue) - 1;
-
-	return(returnValue);
+	
+	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	double returnVal = (double)value * (0.002f / 4096.0f) - 0.001f; 
+	return returnVal;
 }

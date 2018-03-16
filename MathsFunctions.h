@@ -1,14 +1,14 @@
-#ifndef MathsFunctions_H
-#define MathsFunctions_H
+#ifndef MATHSFUNCTIONS_H
+#define MATHSFUNCTIONS_H
 
 
-double range12(double ADCvalue);
+double range12(void);
 
-double range1(double ADCvalue);
+double range1(void);
 
-double range100m(double ADCvalue);
+double range100m(void);
 
-double range1m(double ADCvalue);
+double range1m(void);
 
 
 #endif
