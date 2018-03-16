@@ -32,7 +32,7 @@ void ADC1Init(void) {
 }
 	
 /* function to read ADC and retun value */
-unsigned int ADC1value (void) {
+uint32_t ADC1value (void) {
 	/* set SWSTART to 1 to start conversion */
 	ADC1->CR2 |= ADC_CR2_SWSTART;
 	
@@ -44,12 +44,9 @@ unsigned int ADC1value (void) {
 }
 
  double readADC1(void) {
-	int value = 0; 
-	double returnValue;
-	value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	value = (value << 4) & 0xFF00; 
-	returnValue = ((double)value)/19487;
-	return (returnValue);
+	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	double returnVal = (double)value * (3.3f / 4096.0f); 
+	return returnVal;
 }
 	
 
@@ -83,7 +80,7 @@ void ADC2Init(void) {
 }
 	
 /* function to read ADC and retun value */
-unsigned int ADC2value (void) {
+uint32_t ADC2value (void) {
 	/* set SWSTART to 1 to start conversion */
 	ADC2->CR2 |= ADC_CR2_SWSTART;
 	
@@ -95,11 +92,8 @@ unsigned int ADC2value (void) {
 }
 
  double readADC2(void) {
-	int value = 0; 
-	double returnValue;
-	value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	value = (value << 4) & 0xFF00; 
-	returnValue = ((double)value)/3327;
-	return (returnValue);
+	uint32_t value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	double returnVal = (double)value * (3.3f / 4096.0f); 
+	return returnVal;
 }
 
