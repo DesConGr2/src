@@ -53,3 +53,13 @@ void displayRange(double value) {
 	//bug fix by JJ, need to dealloc mem
 	free(displayValue);
 }
+
+void displayAuto(int toggle) {
+		//simply display an A if auto ranging is on
+		if(toggle == 1){
+			lcd_write_string("A", 0, 15);
+		} else {
+			lcd_write_string(" ", 0, 15);
+		}
+}
+

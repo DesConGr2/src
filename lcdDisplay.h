@@ -11,6 +11,7 @@ void displayClear(void);
 // Display an integer value on the LCD display
 //void displayInt(int value);
 void displayRange(double value);
+void displayAuto(int toggle);
 
 
 #endif

@@ -7,12 +7,13 @@
 #include "digitalIO.h"
 #include "mathsFunctions.h"
 #include "ranging.h"
+#include "sound_response.h"
 
 void SysTick_Handler(void);
 // Delays number of tick Syst icks (happens every 1 ms)
 void Delay(uint32_t dlyTicks);
-void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex);
-void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex);
+void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex, int *autoRangeState);
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState);
 
 
 int main (void) {
@@ -30,6 +31,10 @@ int main (void) {
 	int *typeIndex = malloc(sizeof(int));
 	int *rangeIndex = malloc(sizeof(int));
 	
+	//0 for off, 1 for on
+	int *autoRangeState = malloc(sizeof(int));
+	*autoRangeState = 0;
+	
 	//initialise
 	initButtons();
 	initDisplay();
@@ -37,19 +42,25 @@ int main (void) {
 	ADC1Init();
 	
 	//Wlecome message (tests screen)
+	turnBuzzerOn();
 	displayType("Welcome!");
 	Delay(1000);
 	displayClear();
+	turnBuzzerOff();
 	
 	while(1) {
 		// Display refresh cycle
 		Delay(200);
 		// Check button press
-		processButtonPress(getButtonPressed(), typeIndex, rangeIndex);
+		processButtonPress(getButtonPressed(), typeIndex, rangeIndex, autoRangeState);
 		// Adjust the internal settings based on user input
-		setRange(*rangeIndex);
+		if(*autoRangeState == 1) {
+			autoRange(rangeIndex);
+		} else {
+			setRange(*rangeIndex);
+		}
 		// Display settings
-		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, rangeIndex);
+		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, rangeIndex, autoRangeState);
 	}		
 }
 
@@ -84,7 +95,7 @@ void Delay (uint32_t dlyTicks) {
 // https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
 // https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
 //----------------------------------------------------------------------------*/
-void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex) {
+void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
@@ -103,25 +114,38 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex) {
 			}
 		break;				
 		case 3:
-			//this button increments range type
-			if(*rangeIndex == 4) {
-				*rangeIndex = 0;
-			} else {
-				++*rangeIndex;
+			if(*autoRangeState == 0){
+				//this button increments range type
+				if(*rangeIndex == 4) {
+					*rangeIndex = 0;
+				} else {
+					++*rangeIndex;
+				}
 			}
 		break;				
 		case 4:
-			//this button decrements range type
-			if(*rangeIndex == 0) {
-				*rangeIndex = 4;
-			} else {
-				--*rangeIndex;
+			if(*autoRangeState == 0){
+				//this button decrements range type
+				if(*rangeIndex == 0) {
+					*rangeIndex = 4;
+				} else {
+					--*rangeIndex;
+				}
 			}
-		break;				
+		break;	
+		case 5:
+			//this button toggles autoranging
+			if(*autoRangeState == 0){
+				*autoRangeState = 1;
+			} else {
+				*autoRangeState = 0;
+			}
+		break;
 	}
 }
 
-void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex) {	
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState) {	
+	
 	//display type
 	displayType(readType[*typeIndex]);
 	
@@ -149,6 +173,7 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 					displayReading(range10());
 				break;
 			}
+			
 			//-----------------------------------------//
 		break;
 		case 1:
@@ -168,4 +193,8 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 			//-----------------------------------------//
 		break;
 	}
+	
+	//display if we are in auto mode or not
+	displayAuto(*autoRangeState);
+	
 }
