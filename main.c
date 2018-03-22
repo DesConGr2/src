@@ -1,32 +1,60 @@
-/*----------------------------------------------------------------------------
- * Name:    Blinky.c
- * Purpose: MOdification to Drive 2x16 LCD
- * Note(s): 
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
- *
- * This software is supplied "AS IS" without warranties of any kind.
- *
- * Copyright (c) 2011 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------*/
- 
- /* MODIFIED BY D. CHESMORE JANUARY 2013   */
- 
 #include <stdio.h>
 #include <stdlib.h>
 #include "STM32F4xx.h"
-
 #include "ADC.h"
 #include "lcdDisplay.h"
 #include "buttons.h"
 #include "digitalIO.h"
-#include "MathsFunctions.h"
+#include "mathsFunctions.h"
+#include "ranging.h"
+
+void SysTick_Handler(void);
+// Delays number of tick Syst icks (happens every 1 ms)
+void Delay(uint32_t dlyTicks);
+void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex);
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex);
 
 
-volatile uint32_t msTicks;                      /* counts 1ms timeTicks       */
+int main (void) {
+	//Control of system clock
+  SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
+  if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
+    while (1);                                  /* Capture error              */
+  }
+	//Define the arrays for the user options
+	char *readType[3] = {"V  ", "A  ", "Ohm"};
+	double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
+	double currentRange[5] = {0.001, 0.01, 0.1, 1};
+	// Unsure about what ranges we have for the resistance
+	double resistanceRage[5] = {1, 10, 100, 0};
+	int *typeIndex = malloc(sizeof(int));
+	int *rangeIndex = malloc(sizeof(int));
+	
+	//initialise
+	initButtons();
+	initDisplay();
+	initDigitalIO();
+	ADC1Init();
+	
+	//Wlecome message (tests screen)
+	displayType("Welcome!");
+	Delay(1000);
+	displayClear();
+	
+	while(1) {
+		// Display refresh cycle
+		Delay(200);
+		// Check button press
+		processButtonPress(getButtonPressed(), typeIndex, rangeIndex);
+		// Adjust the internal settings based on user input
+		setRange(*rangeIndex);
+		// Display settings
+		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, rangeIndex);
+	}		
+}
+
+// Counts 1ms timeTicks
+volatile uint32_t msTicks;
 /*----------------------------------------------------------------------------
   SysTick_Handler
  *----------------------------------------------------------------------------*/
@@ -44,143 +72,100 @@ void Delay (uint32_t dlyTicks) {
   while ((msTicks - curTicks) < dlyTicks);
 }
 
-/*----------------------------------------------------------------------------
-  MAIN function
- *----------------------------------------------------------------------------*/
-int main (void) {
-
-	/*----------------------------------------------------------------------------//
-	// Code to deal with the user interface and the screen refresh rate...				//
-	// Multithreading would be ideal but fork() and <sys/types.h> are Os related	//
-	// libraries and functions, so no good for development board. Investigate 		//
-	// other ways of threading, but for now will use time slicing for system			//
-	// Coded by: jjds502																													//
-	// Inital version: 23/03/2018																									//
-	// Consider using interrupts...																								//
-	//																																						//
-	// https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
-	// https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
-	//----------------------------------------------------------------------------*/
-	
-	//Control of system clock
-  SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
-  if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
-    while (1);                                  /* Capture error              */
-  }
-
-	//Declare variables
-	int btnPressed;
-	
-	//Define the arrays for the user options
-	char *RDTYPE[3] = {"V  ", "A  ", "Ohm"};
-	double VRANGE[3] = {12, 1, 0.1};
-	double ARANGE[3] = {1, 0.1, 0.01};
-	double RRANGE[3] = {1, 10, 100};
-	int TYPindex = 0, RNGindex = 0;
-	
-	//initialise
-	initButtons();
-	initDisplay();
-	initDigitalIO();
-	ADC1Init();
-	
-	//Wlecome message (tests screen)
-	displayType("Welcome!");
-	Delay(1000);
-	displayClear();
-	
-	while(1)
-	{
-		//Display refresh cycle
-		Delay(200);
-		
-		btnPressed = getButtonPressed();
-		//----------------------------Check Button press--------------------------------------//
-		switch(btnPressed){
-			case 1 :
-				//this button increments read type
-				if(TYPindex == 2) {
-					TYPindex = 0;
-				} else {
-					++TYPindex;
-				}
-				break;
-				
-			case 2 :
-				//this button decrements read type
-				if(TYPindex == 0) {
-					TYPindex = 2;
-				} else {
-					--TYPindex;
-				}
-				break;
-				
-			case 3 :
-				//this button increments read type
-				if(RNGindex == 2) {
-					RNGindex = 0;
-				} else {
-					++RNGindex;
-				}
-				break;
-				
-			case 4 :
-				//this button decrements read type
-				if(RNGindex == 0) {
-					RNGindex = 2;
-				} else {
-					--RNGindex;
-				}
-				break;
-				
-		}
-		//------------------------------------Display settings--------------------------------//
-		
-		//display type
-		displayType(RDTYPE[TYPindex]);
-		
-		//display resolution
-		switch(TYPindex){
-			case 0:
-				//Display the range (resolution)
-				displayRange(VRANGE[RNGindex]);
-			
-				//---- Code for displaying the reading ----//
-				switch(RNGindex){
-					case 0:
-							displayReading(range12());
-					break;
-					
-					case 1:
-						displayReading(range1());
-					break;
-					
-					case 2:
-						displayReading(range100m());
-					break;
-				}
-				//-----------------------------------------//
-			break;
-			
-			case 1:
-				//Display the range (resolution)
-				displayRange(ARANGE[RNGindex]);
-			
-				//---- Code for displaying the reading ----//
-				displayReading(readADC1());
-				//-----------------------------------------//
-			break;
-			
-			case 2:
-				//Display the range (resolution)
-				displayRange(RRANGE[RNGindex]);
-			
-				//---- Code for displaying the reading ----//
-				displayReading(readADC1());
-				//-----------------------------------------//
-			break;
-		}
+/*----------------------------------------------------------------------------//
+// Code to deal with the user interface and the screen refresh rate...				//
+// Multithreading would be ideal but fork() and <sys/types.h> are Os related	//
+// libraries and functions, so no good for development board. Investigate 		//
+// other ways of threading, but for now will use time slicing for system			//
+// Coded by: jjds502																													//
+// Inital version: 23/03/2018																									//
+// Consider using interrupts...																								//
+//																																						//
+// https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
+// https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
+//----------------------------------------------------------------------------*/
+void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex) {
+	switch(buttonPressed){
+		case 1:
+			//this button increments read type
+			if(*typeIndex == 2) {
+				*typeIndex = 0;
+			} else {
+				++*typeIndex;
+			}
+		break;				
+		case 2:
+			//this button decrements read type
+			if(*typeIndex == 0) {
+				*typeIndex = 2;
+			} else {
+				--*typeIndex;
+			}
+		break;				
+		case 3:
+			//this button increments range type
+			if(*rangeIndex == 4) {
+				*rangeIndex = 0;
+			} else {
+				++*rangeIndex;
+			}
+		break;				
+		case 4:
+			//this button decrements range type
+			if(*rangeIndex == 0) {
+				*rangeIndex = 4;
+			} else {
+				--*rangeIndex;
+			}
+		break;				
 	}
-				
 }
 
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex) {	
+	//display type
+	displayType(readType[*typeIndex]);
+	
+	//display resolution
+	switch(*typeIndex){
+		case 0:
+			//Display the range (resolution)
+			displayRange(voltageRange[*rangeIndex]);
+		
+			//---- Code for displaying the reading ----//
+			switch(*rangeIndex){
+				case 0:
+						displayReading(range1m());
+				break;					
+				case 1:
+					displayReading(range10m());
+				break;					
+				case 2:
+					displayReading(range100m());
+				break;
+				case 3:
+					displayReading(range1());
+				break;
+				case 4:
+					displayReading(range10());
+				break;
+			}
+			//-----------------------------------------//
+		break;
+		case 1:
+			//Display the range (resolution)
+			//displayRange(ARANGE[*rangeIndex]);
+		
+			//---- Code for displaying the reading ----//
+			displayReading(readADC1());
+			//-----------------------------------------//
+		break;			
+		case 2:
+			//Display the range (resolution)
+			//displayRange(RRANGE[*rangeIndex]);
+		
+			//---- Code for displaying the reading ----//
+			displayReading(readADC1());
+			//-----------------------------------------//
+		break;
+	}
+}

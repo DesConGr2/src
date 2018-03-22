@@ -13,19 +13,19 @@ void initDisplay(void) {
 void displayType(char *string) {
 	//lcd_clear_display();
 	
-	lcd_write_string(string, 1, 0);
+	lcd_write_string(string, 0, 0);
 }
 
 void displayStringRange(char *string) {
 	//lcd_clear_display();
 	
-	lcd_write_string(string, 1, 7);
+	lcd_write_string(string, 0, 7);
 }
 
 void displayStringReading(char *string) {
 	//lcd_clear_display();
 	
-	lcd_write_string(string, 0, 0);
+	lcd_write_string(string, 1, 0);
 }
 
 void displayClear(void) {
@@ -46,7 +46,7 @@ void displayReading(double value) {
 void displayRange(double value) {
 	char *displayValue = (char *)malloc(sizeof(double) * 16);
 
-	sprintf(displayValue, "%.2f", value);
+	sprintf(displayValue, "%.3f", value);
 	
 	displayStringRange(displayValue);
 	

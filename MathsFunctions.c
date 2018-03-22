@@ -7,20 +7,21 @@
 //	return returnVal;
 //---------------------------------------------------------//
 
-double range12(void){
+double range1m(void){
 	
 	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	//
-	double returnVal = (double)value * (24.0f / 4096.0f) - 12; 
+	double returnVal = (double)value * (0.002f / 4096.0f) - 0.001f; 
 	return returnVal;
 }
 
-double range1(void){
+double range10m(void){
+	
 	
 	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (2.0f / 4096.0f) - 1; 
+	double returnVal = (double)value * (0.02f / 4096.0f) - 0.01f; 
 	return returnVal;
 }
+
 
 double range100m(void){
 	
@@ -29,10 +30,18 @@ double range100m(void){
 	return returnVal;
 }
 
-double range1m(void){
-	
+double range1(void){
 	
 	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (0.002f / 4096.0f) - 0.001f; 
+	//
+	double returnVal = (double)value * (2.0f / 4096.0f) - 1.0f; 
+	return returnVal;
+}
+
+double range10(void){
+	
+	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	//
+	double returnVal = (double)value * (20.0f / 4096.0f) - 10.0f; 
 	return returnVal;
 }
