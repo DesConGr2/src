@@ -25,11 +25,12 @@ int main (void) {
 	//Define the arrays for the user options
 	char *readType[3] = {"V  ", "A  ", "Ohm"};
 	double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
-	double currentRange[5] = {0.001, 0.01, 0.1, 1};
+	double currentRange[4] = {0.001, 0.01, 0.1, 1};
 	// Unsure about what ranges we have for the resistance
-	double resistanceRage[5] = {1, 10, 100, 0};
+	double resistanceRage[1] = {1000000};
 	int *typeIndex = malloc(sizeof(int));
-	int *rangeIndex = malloc(sizeof(int));
+	int *voltageRangeIndex = malloc(sizeof(int));
+	int *currentRangeIndex = malloc(sizeof(int));
 	
 	//0 for off, 1 for on
 	int *autoRangeState = malloc(sizeof(int));
@@ -52,15 +53,15 @@ int main (void) {
 		// Display refresh cycle
 		Delay(200);
 		// Check button press
-		processButtonPress(getButtonPressed(), typeIndex, rangeIndex, autoRangeState);
+		processButtonPress(getButtonPressed(), typeIndex, voltageRangeIndex, autoRangeState);
 		// Adjust the internal settings based on user input
 		if(*autoRangeState == 1) {
-			autoRange(rangeIndex);
+			autoRange(voltageRangeIndex);
 		} else {
-			setRange(*rangeIndex);
+			setRange(*voltageRangeIndex);
 		}
 		// Display settings
-		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, rangeIndex, autoRangeState);
+		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);
 	}		
 }
 
