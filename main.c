@@ -187,7 +187,7 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 		break;			
 		case 2:
 			//Display the range (resolution)
-			//displayRange(RRANGE[*rangeIndex]);
+			displayRange(resistanceRange[0]);
 		
 			//---- Code for displaying the reading ----//
 			displayReading(readADC1());
