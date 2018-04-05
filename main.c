@@ -72,12 +72,7 @@ int main (void) {
 	
 	// Playing around with timers
 	// TIM2 and TIM5 are 32 bit General Purpose timers
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
 	
-	//TIM2->ARR     = 0;        // Auto Reload Register value => 1ms
-  TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-  //TIM2->CR1    |= 0x0001;       // Enable Counting
 	
 	
 	
@@ -231,28 +226,6 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 	//display if we are in auto mode or not
 	displayAuto(*autoRangeState);
 	
-}
-
-void TIM2_IRQHandler(void) {
-	static int lastVal = 0;
-	static bool hasStartedTiming = false; 
-	TIM2->SR &= ~0x00000001;      // clear IRQ flag in TIM2
-	// Read from J5 pin 3 every tick of the timer
-	int val = readPin(4);
-	
-	if((val == 1) && (lastVal == 0)) {
-		// Start timing OR End timing if timing had already been started
-		TIM2->CR1    |= 0x0001;       // Enable Counting
-		hasStartedTiming = true;
-	} else if((val == 1) && (lastVal == 1)) {
-		// Continuation of same pulse
-	} else if((val == 0) && (lastVal == 1)) {
-		// The initial pulse has dropped to 0 (we have measured a half cycle)
-	} else {
-		// Last value was 0 and the current value is still 0, keep timing if the timer was starteda already
-	}
-	
-	lastVal = val;
 }
 
 void TIM5_IRQHandler(void) {
