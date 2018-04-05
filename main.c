@@ -14,6 +14,25 @@ void SysTick_Handler(void);
 void Delay(uint32_t dlyTicks);
 void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex, int *autoRangeState);
 void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState);
+//Define the arrays for the user options
+char *readType[3] = {"V  ", "A  ", "Ohm"};
+double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
+double currentRange[4] = {0.001, 0.01, 0.1, 1};
+// Unsure about what ranges we have for the resistance
+double resistanceRage[1] = {1000000};
+int *typeIndex;
+int *voltageRangeIndex;
+int *currentRangeIndex;
+
+//for debouncing
+int prevbtn;
+int debCount;
+
+//for display
+int dispcount;
+
+//0 for off, 1 for on
+int *autoRangeState;
 
 
 int main (void) {
@@ -22,18 +41,13 @@ int main (void) {
   if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
     while (1);                                  /* Capture error              */
   }
-	//Define the arrays for the user options
-	char *readType[3] = {"V  ", "A  ", "Ohm"};
-	double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
-	double currentRange[4] = {0.001, 0.01, 0.1, 1};
-	// Unsure about what ranges we have for the resistance
-	double resistanceRage[1] = {1000000};
-	int *typeIndex = malloc(sizeof(int));
-	int *voltageRangeIndex = malloc(sizeof(int));
-	int *currentRangeIndex = malloc(sizeof(int));
 	
+	typeIndex = malloc(sizeof(int));
+	voltageRangeIndex = malloc(sizeof(int));
+	currentRangeIndex = malloc(sizeof(int));
+
 	//0 for off, 1 for on
-	int *autoRangeState = malloc(sizeof(int));
+	autoRangeState = malloc(sizeof(int));
 	*autoRangeState = 0;
 	
 	//initialise
@@ -42,6 +56,13 @@ int main (void) {
 	initDigitalIO();
 	ADC1Init();
 	
+	//init debouncing vars
+	debCount = 0;
+	prevbtn = 0;
+	
+	//for display refresh
+	dispcount = 0;
+	
 	//Wlecome message (tests screen)
 	turnBuzzerOn();
 	displayType("Welcome!");
@@ -49,20 +70,33 @@ int main (void) {
 	displayClear();
 	turnBuzzerOff();
 	
-	while(1) {
-		// Display refresh cycle
-		Delay(200);
-		// Check button press
-		processButtonPress(getButtonPressed(), typeIndex, voltageRangeIndex, autoRangeState);
-		// Adjust the internal settings based on user input
-		if(*autoRangeState == 1) {
-			autoRange(voltageRangeIndex);
-		} else {
-			setRange(*voltageRangeIndex);
-		}
-		// Display settings
-		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);
-	}		
+	// Playing around with timers
+	// TIM2 and TIM5 are 32 bit General Purpose timers
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
+	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
+	
+	//TIM2->ARR     = 0;        // Auto Reload Register value => 1ms
+  TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
+  //TIM2->CR1    |= 0x0001;       // Enable Counting
+	
+	
+	
+	
+	//RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+	NVIC_EnableIRQ(TIM5_IRQn);    // Enable IRQ for TIM5 in NVIC
+
+  TIM5->ARR     = 10*84000;    // Auto Reload Register value => 10ms
+  TIM5->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
+  TIM5->CR1    |= 0x0001;       // Enable Counting
+	
+//	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+//	NVIC_EnableIRQ(TIM3_IRQn);    // Enable IRQ for TIM3 in NVIC
+
+//  TIM3->ARR     = 65535;        // Auto Reload Register value => 1ms
+//  TIM3->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
+//  TIM3->CR1    |= 0x0001;       // Enable Counting
+	while(1);
+		
 }
 
 // Counts 1ms timeTicks
@@ -73,7 +107,6 @@ volatile uint32_t msTicks;
 void SysTick_Handler(void) {
   msTicks++;
 }
-
 /*----------------------------------------------------------------------------
   delays number of tick Systicks (happens every 1 ms)
  *----------------------------------------------------------------------------*/
@@ -96,6 +129,7 @@ void Delay (uint32_t dlyTicks) {
 // https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
 // https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
 //----------------------------------------------------------------------------*/
+
 void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
 	switch(buttonPressed){
 		case 1:
@@ -144,7 +178,6 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		break;
 	}
 }
-
 void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState) {	
 	
 	//display type
@@ -199,3 +232,71 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 	displayAuto(*autoRangeState);
 	
 }
+
+void TIM2_IRQHandler(void) {
+	static int lastVal = 0;
+	static bool hasStartedTiming = false; 
+	TIM2->SR &= ~0x00000001;      // clear IRQ flag in TIM2
+	// Read from J5 pin 3 every tick of the timer
+	int val = readPin(4);
+	
+	if((val == 1) && (lastVal == 0)) {
+		// Start timing OR End timing if timing had already been started
+		TIM2->CR1    |= 0x0001;       // Enable Counting
+		hasStartedTiming = true;
+	} else if((val == 1) && (lastVal == 1)) {
+		// Continuation of same pulse
+	} else if((val == 0) && (lastVal == 1)) {
+		// The initial pulse has dropped to 0 (we have measured a half cycle)
+	} else {
+		// Last value was 0 and the current value is still 0, keep timing if the timer was starteda already
+	}
+	
+	lastVal = val;
+}
+
+void TIM5_IRQHandler(void) {
+	// JJ's button Handler!!! LOLS
+	// Debounce the shitting button
+  TIM5->SR &= ~0x00000001;      // clear IRQ flag in TIM5
+	
+  // Check button press
+	int curbtn = getButtonPressed();
+	
+
+		if( prevbtn == curbtn ){
+			
+			if(debCount == 3 && curbtn != 0) {
+				displayClear();
+				processButtonPress(curbtn, typeIndex, voltageRangeIndex, autoRangeState);
+				debCount++;
+			} else if(debCount < 4) {
+				debCount++;
+			}	
+				
+		} else {
+			//update the button pressed
+			debCount = 0;
+			prevbtn = curbtn;
+		}
+
+	
+	// Adjust the internal settings based on user input
+	if(*autoRangeState == 1) {
+		autoRange(voltageRangeIndex);
+	} else {
+		setRange(*voltageRangeIndex);
+	}
+	
+	// Display settings
+	dispcount++;
+	
+	if (dispcount ==  20) {
+	//display
+	display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);	
+	//reset the counter
+	dispcount = 0;
+	}
+	
+}
+
