@@ -8,17 +8,8 @@
 #include "mathsFunctions.h"
 #include "ranging.h"
 #include "sound_response.h"
-//#include "freqCalc.h"
+#include "freqCalc.h"
 
-void initFreqCalc(void);
-void startFreqCalc(void);
-void stopFreqCalc(void);
-double getFreq(void);
-double timerCount;
-int lastVal;
-int hasStartedTiming;
-int rdVal;
-int test;
 
 void SysTick_Handler(void);
 // Delays number of tick Syst icks (happens every 1 ms)
@@ -46,9 +37,9 @@ int dispcount;
 int *autoRangeState;
 
 
+
 int main (void) {
-	rdVal = 0;
-	lastVal = 0;
+
 	//Control of system clock
   SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
   if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
@@ -57,6 +48,7 @@ int main (void) {
 	
 	typeIndex = malloc(sizeof(int));
 	voltageRangeIndex = malloc(sizeof(int));
+	*voltageRangeIndex = 0;
 	currentRangeIndex = malloc(sizeof(int));
 
 	//0 for off, 1 for on
@@ -86,19 +78,15 @@ int main (void) {
 	
 	// Playing around with timers
 	// TIM2 and TIM5 are 32 bit General Purpose timers
-	
-	
-	
-	
-	
-	//RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
-	//NVIC_EnableIRQ(TIM5_IRQn);    // Enable IRQ for TIM5 in NVIC
 
-  //TIM5->ARR     = 10*84000;    // Auto Reload Register value => 10ms
-  //TIM5->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-  //TIM5->CR1    |= 0x0001;       // Enable Counting
 	
-	
+	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+	NVIC_EnableIRQ(TIM5_IRQn);    // Enable IRQ for TIM5 in NVIC
+
+  TIM5->ARR     = 10*84000;    // Auto Reload Register value => 10ms
+  TIM5->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
+  TIM5->CR1    |= 0x0001;       // Enable Counting
+
 	
 //	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 //	NVIC_EnableIRQ(TIM3_IRQn);    // Enable IRQ for TIM3 in NVIC
@@ -106,71 +94,16 @@ int main (void) {
 //  TIM3->ARR     = 65535;        // Auto Reload Register value => 1ms
 //  TIM3->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
 //  TIM3->CR1    |= 0x0001;       // Enable Counting
-	
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	TIM2->ARR     = 8400;        // Auto Reload Register value => 1ms
-  TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-  TIM2->CR1    |= 0x0001;       // Enable Counting
-	
-	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
+
+MeasurementVals *vals = malloc(sizeof(MeasurementVals));
+initFreqCalc(vals);
 	
 	
 	while(1) {
-		//startFreqCalc();
-		//Delay(1000);
-		//double freq = getFreq();
-		//displayReading(timerCount);
 	}
 		
 }
 
-void TIM2_IRQHandler(void) {
-	TIM2->SR &= ~TIM_SR_UIF;      // clear IRQ flag in TIM2
-	//test++;	
-	rdVal = readPin(15);
-	
-	if((rdVal == 1) && (lastVal == 0)) {
-		if(hasStartedTiming == 0) {
-			hasStartedTiming = 1;
-			timerCount = 0;
-		} else {
-			hasStartedTiming = 0;
-			double freq = 1.0f / (timerCount / 10000.0f);
-			displayReading(freq);
-		}
-	} else {
-		if(hasStartedTiming == 1) {
-			timerCount++;
-		}
-	}
-	
-	lastVal = rdVal;
-	
-	
-//	static int lastVal = 0;
-//	// 0 for not started, 1 for started
-//	int hasStartedTiming = 1; 
-//	
-//	if(hasStartedTiming) {
-//		timerCount += 1;
-//	}
-//	// Read from J5 pin 3 every tick of the timer
-//	int val = readPin(4);
-//	
-//	if((val == 1) && (lastVal == 0)) {
-//		// Start timing OR End timing if timing had already been started
-//		if(hasStartedTiming == 0) {
-//			hasStartedTiming = 1;
-//			timerCount = 0;
-//		} else {
-//			hasStartedTiming = 0;
-//			displayReading(timerCount);
-//		}
-//	}
-//	lastVal = val;
-	
-	
-}
 // Counts 1ms timeTicks
 volatile uint32_t msTicks;
 /*----------------------------------------------------------------------------
@@ -305,77 +238,52 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 	
 }
 
-//void TIM5_IRQHandler(void) {
-//	// JJ's button Handler!!! LOLS
-//	// Debounce the shitting button
-//  TIM5->SR &= ~0x00000001;      // clear IRQ flag in TIM5
-//	
-//  // Check button press
-//	int curbtn = getButtonPressed();
-//	
-
-//		if( prevbtn == curbtn ){
-//			
-//			if(debCount == 3 && curbtn != 0) {
-//				displayClear();
-//				processButtonPress(curbtn, typeIndex, voltageRangeIndex, autoRangeState);
-//				debCount++;
-//			} else if(debCount < 4) {
-//				debCount++;
-//			}	
-//				
-//		} else {
-//			//update the button pressed
-//			debCount = 0;
-//			prevbtn = curbtn;
-//		}
-
-//	
-//	// Adjust the internal settings based on user input
-//	if(*autoRangeState == 1) {
-//		autoRange(voltageRangeIndex);
-//	} else {
-//		setRange(*voltageRangeIndex);
-//	}
-//	
-//	// Display settings
-//	dispcount++;
-//	
-//	if (dispcount ==  20) {
-//	//display
-//	display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);	
-//	//reset the counter
-//	dispcount = 0;
-//	}
-//	
-//}
-
-
-
-double getFreq(void) {
-	double timSec = timerCount / 84000000.0f;
-	return (1.0f / timSec);
-}
-
-void initFreqCalc(void) {
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
+void TIM5_IRQHandler(void) {
+	// JJ's button Handler!!! LOLS
+	// Debounce the shitting button
+  TIM5->SR &= ~0x00000001;      // clear IRQ flag in TIM5
 	
+  // Check button press
+	int curbtn = getButtonPressed();
 	
-	TIM2->ARR     = 0;        // Auto Reload Register value => 1ms
-  TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-  TIM2->CR1    |= TIM_CR1_CEN;       // Enable Counting
+
+		if( prevbtn == curbtn ){
+			
+			if(debCount == 3 && curbtn != 0) {
+				displayClear();
+				processButtonPress(curbtn, typeIndex, voltageRangeIndex, autoRangeState);
+				debCount++;
+			} else if(debCount < 4) {
+				debCount++;
+			}	
+				
+		} else {
+			//update the button pressed
+			debCount = 0;
+			prevbtn = curbtn;
+		}
+
 	
-	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
+	// Adjust the internal settings based on user input
+	if(*autoRangeState == 1) {
+		autoRange(voltageRangeIndex);
+	} else {
+		setRange(*voltageRangeIndex);
+	}
+	
+	// Display settings
+	dispcount++;
+	
+	if (dispcount ==  20) {
+	//display
+	display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);	
+	//reset the counter
+	dispcount = 0;
+	}
 	
 }
 
-void startFreqCalc(void) {
-	//TIM2->CNT = 0;
-	TIM2->CR1 |= 0x0001;       // Enable Counting
-}
 
-void stopFreqCalc(void) {
-	TIM2->CR1 &= ~0x0001;       // Disable Counting
-}
+
 
 

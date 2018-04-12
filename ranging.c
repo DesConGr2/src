@@ -7,37 +7,68 @@
 // NOTE (chris) : Using pins 2, 3 and 4 of J7 to output these signals, J7 pin 2 is the MSB 
 // This currently isnt shown in the code since the "setPin" function takes the GPIO pin number rather than the 
 // board edge connector pin number, refer to the module webpage's edge connector sheet
+//void setRange(int range) {
+//	switch(range) {
+//		case 0:
+//			// 000 for 1m
+//			setPin(3, 0);
+//			setPin(4, 0);
+//			setPin(5, 0);
+//		break;
+//		case 1:
+//			// 001 for 10m
+//			setPin(3, 0);
+//			setPin(4, 0);
+//			setPin(5, 1);
+//		break;
+//		case 2:
+//			// 010 for 100m
+//			setPin(3, 0);
+//			setPin(4, 1);
+//			setPin(5, 0);
+//		break;
+//		case 3:
+//			// 011 for 1
+//			setPin(3, 0);
+//			setPin(4, 1);
+//			setPin(5, 1);
+//		break;
+//		case 4:
+//			// 100 for 10
+//			setPin(3, 1);
+//			setPin(4, 0);
+//			setPin(5, 0);
+//		break;
+//	}
+//}
+
+// TEST FOR HARRY
 void setRange(int range) {
 	switch(range) {
 		case 0:
-			// 000 for 1m
-			setPin(3, 0);
-			setPin(4, 0);
-			setPin(5, 0);
+			// 11 for 1m
+			setPin(3, 1);
+			setPin(4, 1);
 		break;
 		case 1:
-			// 001 for 10m
-			setPin(3, 0);
-			setPin(4, 0);
-			setPin(5, 1);
-		break;
-		case 2:
-			// 010 for 100m
-			setPin(3, 0);
-			setPin(4, 1);
-			setPin(5, 0);
-		break;
-		case 3:
-			// 011 for 1
-			setPin(3, 0);
-			setPin(4, 1);
-			setPin(5, 1);
-		break;
-		case 4:
-			// 100 for 10
+			// 10 for 10m
 			setPin(3, 1);
 			setPin(4, 0);
-			setPin(5, 0);
+		break;
+		case 2:
+			// 01 for 100m
+			setPin(3, 0);
+			setPin(4, 1);
+		break;
+		case 3:
+			// 00 for 1
+			setPin(3, 0);
+			setPin(4, 0);
+		break;
+		case 4:
+			// 00 for 10
+//			setPin(3, 0);
+//			setPin(4, 0);
 		break;
 	}
 }
