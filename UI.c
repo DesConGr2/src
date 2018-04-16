@@ -8,6 +8,7 @@
 #include "ranging.h"
 #include "buttons.h"
 #include "FreqCalc.h"
+#include "serial_comms.h"
 
 typedef struct UIVals {
 	char *readType[5];
@@ -142,6 +143,10 @@ void display(char *readType[],
 						 int rangeIndex, 
 						 int autoRangeState) {	
 	
+							 
+	//initilise display value
+	double displayVal;
+	
 	//display type
 	displayType(readType[typeIndex]);
 	
@@ -154,18 +159,33 @@ void display(char *readType[],
 			//---- Code for displaying the reading ----//
 			switch(rangeIndex){
 				case 0:
-						displayReading(range1m());
+					displayVal = range1m();
+					// Display to LCD
+					displayReading(displayVal);
 				break;					
 				case 1:
-					displayReading(range10m());
+					displayVal = range10m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					
 				break;					
 				case 2:
-					displayReading(range100m());
+					displayVal = range10m();
+				
+					displayReading(displayVal);
 				break;
 				case 3:
-					displayReading(range1());
+					displayVal = range1();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 4:
+					displayVal = range10();
 					displayReading(range10());
 				break;
 			}
