@@ -3,8 +3,6 @@
 
 void datalog(void);
 
-int addToDatalog(double value);
-
 void displayDatalog(void);
 	
 void closeDatalog(void);
@@ -12,6 +10,10 @@ void closeDatalog(void);
 double DatalogValue(int value);
 
 void setDataLogSize(int value);
+
+void manualDisplayDecrement(void);
+
+void manualDisplayIncrement(void);
 
 
 

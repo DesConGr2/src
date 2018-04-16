@@ -1,49 +1,70 @@
 #include "stm32f4xx.h"                  		// Device header
 #include "DataLog.h"
+#include "lcdDisplay.h"
 #include "ADC.h" 
+#include <stdlib.h>
+#include <stdio.h>
+
 
 double DataOut;
 int position;
 int displayPosistion;
 int sizeOfDatalog;
-double **Datalog;
+int check;
+double *Datalog;
+
 		
 ///////////////Basic functions///////////////
-
-//Making a datalog
-void datalog(void)
+void addToDatalog(double value)
 {
-	sizeOfDatalog = 15;
-	position = 0;
-	displayPosistion = 0;
-	Datalog = (double *)malloc(sizeOfDatalog);
-}
-
-//returns 1 if the value was stored successfuly and 0 if it faulted 
-int addToDatalog(double value)
-{
-	 if(position => sizeOfDatalog)
+	 if(position >= sizeOfDatalog-1)
 	 {
-		char message = "The datalog is full";
-		displayType(message);
-		return(0); 
+		displayType("The datalog is full");//To be displayed in the datalog sections of dislpay
+		//delay
+		displayType("                   ");
 	 }
 	 else
 	 {
 		 Datalog[position] = value;
-		 displayReading(value);
+		 displayReading(value);//needs to be changed to the datalog display
 		 position++;
-		 return(1);
 	 }
 }
+
+//Make's a datalog 
+void datalogButton(double value)
+{
+	if(check == 0)
+	{
+		sizeOfDatalog = 15;
+		position = 0;
+		displayPosistion = 0;
+		check = 1;
+		Datalog = (double *)malloc(sizeof(sizeOfDatalog));
+		addToDatalog(value);
+	}
+	else
+	{
+		addToDatalog(value);
+	}
+}
+
 
 //dislays each value from the datalog for a period of time
 void displayDatalog(void)
 {
-	for(int i = 0; i => sizeOfDatalog-1; i++)
+	for(int i = 0; i >= sizeOfDatalog-1; i++)
 	{
-		displayReading(datalog[i]);
-		//add delay
+		if(Datalog[i] == NULL)
+		{
+			i = sizeOfDatalog-1;
+		}
+		else
+		{
+			//set datalog title to dislpay
+			displayReading(Datalog[i]);
+			//add delay
+		}
 	}
 }
 
@@ -53,27 +74,25 @@ void closeDatalog(void)
 }
 
 ///////////////Adevnaced problems///////////////
-
-//return a requested value 
-double DatalogValue(int value)
+	
+//allows the user to manually cycle though the datalog
+void manualDisplayIncrement(void)
+{
+	if(displayPosistion != sizeOfDatalog-1)
 	{
-		if(value-1 >= sizeOfDatalog)
-		{
-			//Print message error message
-			char message = ("There are only %d values in the datalog", sizeOfDatalog);
-			displayType(message);
-			return NULL; 
-		}
-		else
-		{
-			//loop to requested value a return 
-			for(1=0; i<= value-1; i++)
-			{
-				DataOut = Datalog[i];
-			}
-			return(DataOut);
-		}
+		displayPosistion++;
+		displayReading(displayPosistion);//Needs to be changed to the datalog section
 	}
+}
+
+void manualDisplayDecrement(void)
+{
+	if(displayPosistion != 0)
+	{
+		displayPosistion--;
+		displayReading(displayPosistion);//Needs to be changed to the datalog section
+	}
+}
 
 //Set the size of datalog
 void setDataLogSize(int value)
@@ -82,7 +101,6 @@ void setDataLogSize(int value)
 		Datalog = (double *)realloc(Datalog, sizeOfDatalog);
 	}
 	
-//allows the user to manually cycle though the datalog
-void manualDisplayincrement(void)
+
 
 
