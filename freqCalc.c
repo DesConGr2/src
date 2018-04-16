@@ -3,23 +3,38 @@
 #include "digitalIO.h"
 #include <stdlib.h>
 
-//double getFreq(void) {
-//}
-MeasurementVals *vals;
+// TODO: rename
+typedef struct FreqVals {
+	int lastReadVal;
+	int hasStartedTiming;
+	double timerCount;
+} FreqVals;
 
-void initFreqCalc(MeasurementVals *valsIn) {
+FreqVals *vals;
+
+void initFreqCalc(void) {
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	TIM2->ARR     = 8400;        // Auto Reload Register value => 1ms
+	TIM2->ARR     = 84;        // Auto Reload Register value => 1ms
   TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
   TIM2->CR1    |= 0x0001;       // Enable Counting
 	
 	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
 	
-	vals = valsIn;
+	vals = malloc(sizeof(FreqVals));
 	
 	vals->hasStartedTiming = 0;
 	vals->lastReadVal = 0;
 	vals->timerCount = 0;
+}
+
+double getFrequency() {
+	double freq = 1.0f / (vals->timerCount);
+	return freq;
+}
+
+double getPeriod() {
+	//return (vals->timerCount / 1000000.0f);
+	return (vals->timerCount);
 }
 
 void startFreqCalc(void) {
@@ -32,21 +47,22 @@ void stopFreqCalc(void) {
 
 void TIM2_IRQHandler(void) {
 	TIM2->SR &= ~TIM_SR_UIF;      // clear IRQ flag in TIM2
-	vals->timerCount++;
+	//vals->timerCount += (8400 / 1000000.0f);
+	//vals->timerCount += (TIM2->ARR / 84000000.0f);
 	int rdVal = readPin(15);
 	
 	if((rdVal == 1) && (vals->lastReadVal == 0)) {
 		if(vals->hasStartedTiming == 0) {
 			vals->hasStartedTiming = 1;
-			vals->timerCount = 0;
+			vals->timerCount = 0.0f;
 		} else {
 			vals->hasStartedTiming = 0;
-			double freq = 1.0f / (vals->timerCount / 10000.0f);
-			//displayReading(freq);
 		}
 	} else {
 		if(vals->hasStartedTiming == 1) {
-			vals->timerCount++;
+			//vals->timerCount++;
+			
+			vals->timerCount += (((float)TIM2->CNT + (float)TIM2->ARR) / 84000000.0f);
 		}
 	}
 	

@@ -12,6 +12,6 @@
 // Pin 2 is the MSB and pin 4 is the LSB
 void setRange(int range);
 // Automatically chose a suitable range for the user
-void autoRange(int *range);
+int autoRange(int range);
 
 #endif

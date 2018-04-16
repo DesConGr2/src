@@ -3,16 +3,12 @@
 
 #include <stdlib.h>
 
-typedef struct MeasurementVals {
-	int lastReadVal;
-	int hasStartedTiming;
-	int timerCount;
-} MeasurementVals;
 
 // Based on an input digital pulse code signal, measure the frequency of that signal
-void initFreqCalc(MeasurementVals *vals);
+void initFreqCalc(void);
 void startFreqCalc(void);
 void stopFreqCalc(void);
-double getFreq(void);
+double getFrequency(void);
+double getPeriod(void);
 
 #endif
