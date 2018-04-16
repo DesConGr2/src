@@ -72,6 +72,7 @@ void WriteToOutputString(double output) {
 		
 		// JUST SEND IT OMG
 		PB_FTDI_Send(OutString, 16);
+		//PB_FTDI_Send("\0", 8);
 	
 		free(OutString);
 }
