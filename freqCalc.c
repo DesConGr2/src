@@ -62,7 +62,8 @@ void TIM2_IRQHandler(void) {
 		if(vals->hasStartedTiming == 1) {
 			//vals->timerCount++;
 			
-			vals->timerCount += (((float)TIM2->CNT + (float)TIM2->ARR) / 84000000.0f);
+			//vals->timerCount += (((float)TIM2->CNT + (float)TIM2->ARR) / 84000000.0f);
+			vals->timerCount += (((float)TIM2->ARR) / 84000000.0f);
 		}
 	}
 	
