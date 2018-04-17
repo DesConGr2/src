@@ -3,9 +3,11 @@
 #include "STM32F4xx.h"
 #include "ADC.h"
 #include "digitalIO.h"
+#include "lcdDisplay.h"
 #include "sound_response.h"
 #include "freqCalc.h"
 #include "UI.h"
+#include "serial_comms.h"
 
 //void SysTick_Handler(void);
 //// Delays number of tick Syst icks (happens every 1 ms)
@@ -24,6 +26,7 @@ int main (void) {
 	// TODO: change to 'initADC1()' to be consistent with the other naming
 	ADC1Init();
 	initUI();
+	CommsInit();
 	
 	//initFreqCalc();
 
@@ -34,7 +37,12 @@ int main (void) {
   //displayClear();
 	//turnBuzzerOff();
 	
+	
 	while(1) {
+//		if (GPIOE->IDR & 0x0001) GPIOA->ODR |=  0x0040;   // LED on
+//    else                     GPIOA->ODR &= ~0x0040;   // else LED off
+//    if (GPIOE->IDR & 0x0002) UART4->DR = 'a';   // send    
+//    for (int i = 0; i<100000; i++) {};          // waste time
 	}
 		
 }

@@ -58,3 +58,12 @@ double range10(void){
 	double returnVal = (double)value * (20.0f / bitsIn3V) - 10.0f; 
 	return returnVal;
 }
+
+double testRange(void){
+	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+	//
+	double voltPerBit = 3.354f / 4096.0f;
+	//double bitsIn3V = 3.0f / voltPerBit;
+	double returnVal = (double)value * voltPerBit; 
+	return returnVal;
+}
