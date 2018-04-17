@@ -12,15 +12,14 @@
 
 typedef struct UIVals {
 	char *readType[5];
-	double voltageRange[5];
-	double currentRange[4];
-	// Unsure about what ranges we have for the resistance
-	double resistanceRage[1];
-	double capacitanceRange[3];
+	char *voltageRange[6];
+	char *currentRange[4];
+	char *resistanceRage[1];
+	char *capacitanceRange[3];
 	
 	int typeIndex;
-	int voltageRangeIndex;
-	int currentRangeIndex;
+	int rangeIndex;
+	
 	//for debouncing
 	int prevbtn;
 	int debCount;
@@ -32,6 +31,8 @@ typedef struct UIVals {
 
 
 UIVals *interfaceVals;
+const int MAXINDEX[5] = {5, 3, 0, 0, 2};
+
 
 void initUI(void) {
 	initButtons();
@@ -62,26 +63,24 @@ void initUI(void) {
 	interfaceVals->readType[3] = "Hz ";
 	interfaceVals->readType[4] = "C  ";
 	
-	interfaceVals->voltageRange[0] =  0.001;
-	interfaceVals->voltageRange[1] =  0.01;
-	interfaceVals->voltageRange[2] =  0.1;
-	interfaceVals->voltageRange[3] =  1.0;
-	interfaceVals->voltageRange[4] = 10.0;
+	interfaceVals->voltageRange[0] =  "0.001";
+	interfaceVals->voltageRange[1] =  "0.01";
+	interfaceVals->voltageRange[2] =  "0.1";
+	interfaceVals->voltageRange[3] =  "1.0";
+	interfaceVals->voltageRange[4] = "10.0";
+	interfaceVals->voltageRange[5] = "Test";
 	
-	interfaceVals->currentRange[0] = 0.001;
-	interfaceVals->currentRange[1] = 0.01;
-	interfaceVals->currentRange[2] = 0.1;
-	interfaceVals->currentRange[3] = 1.0;
+	interfaceVals->currentRange[0] = "0.001";
+	interfaceVals->currentRange[1] = "0.01";
+	interfaceVals->currentRange[2] = "0.1";
+	interfaceVals->currentRange[3] = "1.0";
 	
-	interfaceVals->capacitanceRange[0] = 1.0;
-	interfaceVals->capacitanceRange[1] = 2.0;
-	interfaceVals->capacitanceRange[2] = 3.0;
+	interfaceVals->capacitanceRange[0] = "1.0";
+	interfaceVals->capacitanceRange[1] = "2.0";
+	interfaceVals->capacitanceRange[2] = "3.0";
 
 	// Unsure about what ranges we have for the resistance
-	interfaceVals->resistanceRage[0] = 1000000;
-	
-	interfaceVals->voltageRangeIndex = 4;
-	interfaceVals->currentRangeIndex = 3;
+	interfaceVals->resistanceRage[0] = "1000000";
 }
 
 
@@ -107,7 +106,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 			if(*autoRangeState == 0){
 				//this button increments range type
 				// TODO: make the range index change based on what is being measured
-				if(*rangeIndex == 4) {
+				if(*rangeIndex == MAXINDEX[*typeIndex]) {
 					*rangeIndex = 0;
 				} else {
 					++*rangeIndex;
@@ -118,7 +117,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 			if(*autoRangeState == 0){
 				//this button decrements range type
 				if(*rangeIndex == 0) {
-					*rangeIndex = 4;
+					*rangeIndex = MAXINDEX[*typeIndex];
 				} else {
 					--*rangeIndex;
 				}
@@ -135,10 +134,10 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 	}
 }
 void display(char *readType[], 
-						 double voltageRange[], 
-						 double currentRange[], 
-						 double resistanceRange[], 
-						 double capacitanceRange[], 
+						 char *voltageRange[], 
+						 char *currentRange[], 
+						 char *resistanceRange[], 
+						 char *capacitanceRange[], 
 						 int typeIndex, 
 						 int rangeIndex, 
 						 int autoRangeState) {	
@@ -152,11 +151,11 @@ void display(char *readType[],
 	
 	//display resolution
 	switch(typeIndex){
-		case 0:
+		case 0:		//Voltage
 			//Display the range (resolution)
-			displayRange(voltageRange[rangeIndex]);
+			displayStringRange(voltageRange[rangeIndex]);
 		
-			//---- Code for displaying the reading ----//
+			//---- Code for displaying Voltage reading ----//
 			switch(rangeIndex){
 				case 0:
 					displayVal = range1m();
@@ -188,32 +187,38 @@ void display(char *readType[],
 					displayVal = range10();
 					displayReading(range10());
 				break;
+				case 5:
+					displayVal = testRange();
+					displayReading(displayVal);
+				break;
 			}
 			
 			//-----------------------------------------//
 		break;
-		case 1:
+		case 1:		//Current
 			//Display the range (resolution)
-			//displayRange(ARANGE[*rangeIndex]);
+			displayStringRange(currentRange[rangeIndex]);
 		
-			//---- Code for displaying the reading ----//
+			//---- Code for displaying Current reading ----//
 			displayReading(readADC1());
 			//-----------------------------------------//
 		break;			
-		case 2:
+		case 2:		//Resistance
 			//Display the range (resolution)
-			displayRange(resistanceRange[0]);
+			displayStringRange(resistanceRange[0]);
 		
-			//---- Code for displaying the reading ----//
+			//---- Code for displaying Resistance reading ----//
 			displayReading(readADC1());
 			//-----------------------------------------//
 		break;
-		case 3:
+		case 3:		//Frequency
 			displayReading(getFrequency());
 			//displayReading(getPeriod());
 		break;
-		case 4:
-			displayRange(capacitanceRange[rangeIndex]);
+		case 4:		//Capacitance
+			
+		//---- Code for displaying Resistance reading ----//
+			displayStringRange(capacitanceRange[rangeIndex]);
 			if(rangeIndex == 0) {
 				// Hacky way of addressing things for harry 
 				setRange(0);
@@ -234,7 +239,7 @@ void display(char *readType[],
 			}
 			
 			displayReading(getPeriod());
-		
+			//-----------------------------------------//
 		break;
 	}
 	
@@ -250,9 +255,9 @@ void TIM5_IRQHandler(void) {
 	
 	// Adjust the internal settings based on user input
 	if(interfaceVals->autoRangeState == 1) {
-		autoRange(interfaceVals->voltageRangeIndex);
+		autoRange(interfaceVals->rangeIndex);
 	} else {
-		setRange(interfaceVals->voltageRangeIndex);
+		setRange(interfaceVals->rangeIndex);
 	}
 	
 	// Display settings
@@ -266,7 +271,7 @@ void TIM5_IRQHandler(void) {
 					interfaceVals->resistanceRage, 
 					interfaceVals->capacitanceRange, 
 					interfaceVals->typeIndex, 
-					interfaceVals->voltageRangeIndex, 
+					interfaceVals->rangeIndex, 
 					interfaceVals->autoRangeState);	
 	//reset the counter
 	interfaceVals->dispcount = 0;
@@ -284,7 +289,7 @@ void TIM3_IRQHandler(void) {
 		
 		if(interfaceVals->debCount == 3 && curbtn != 0) {
 			displayClear();
-			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->voltageRangeIndex, &interfaceVals->autoRangeState);
+			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->rangeIndex, &interfaceVals->autoRangeState);
 			interfaceVals->debCount++;
 		} else if(interfaceVals->debCount < 4) {
 			interfaceVals->debCount++;

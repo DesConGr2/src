@@ -6,5 +6,6 @@ double range10m(void);
 double range100m(void);
 double range1(void);
 double range10(void);
+double testRange(void);
 
 #endif

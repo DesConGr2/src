@@ -65,16 +65,19 @@ void WriteToOutputString(double output) {
 			
 		// Initialise the Output String
 		char *OutString = (char *)malloc(sizeof(double) * 16);
-	
+		//char *Terminator = (char *)malloc(sizeof(char));
+		//sprintf(Terminator, "%c", '\0');
 		// ENSURE TO CALL THIS FUNCTION BEFORE STARTING TO SEND THE STRING
 		// OTHERWISE YOU WILL NOT SEND ANYTHING COHERENT AND IT MAY GET STUCK
 		sprintf(OutString, "%.4f", output);
 		
 		// JUST SEND IT OMG
 		PB_FTDI_Send(OutString, 16);
-		//PB_FTDI_Send("\0", 8);
+		//PB_FTDI_Send(Terminator, 16);
+		PB_FTDI_SendNewLine();
 	
 		free(OutString);
+		//free(Terminator);
 }
 
 void SendViaSerial(void) {
