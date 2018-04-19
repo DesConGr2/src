@@ -180,7 +180,7 @@ void display(char *readType[],
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
-					WriteToOutputString(displayVal);
+					//WriteToOutputString(displayVal);
 					
 				break;
 				case 4:
@@ -212,7 +212,7 @@ void display(char *readType[],
 			//-----------------------------------------//
 		break;
 		case 3:		//Frequency
-			displayReading(getFrequency());
+			displayReading(getAveragedFrequency());
 			//displayReading(getPeriod());
 		break;
 		case 4:		//Capacitance

@@ -9,6 +9,7 @@ void initFreqCalc(void);
 void startFreqCalc(void);
 void stopFreqCalc(void);
 double getFrequency(void);
+double getAveragedFrequency(void);
 double getPeriod(void);
 
 #endif

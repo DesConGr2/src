@@ -26,7 +26,28 @@ int main (void) {
 	// TODO: change to 'initADC1()' to be consistent with the other naming
 	ADC1Init();
 	initUI();
-	CommsInit();
+	//CommsInit();
+	
+	// Do DAC things
+//	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+//	RCC->APB1ENR |= RCC_APB1ENR_DACEN;
+//	
+	// DONT NEED TO ADJUST GPIOA, ITS ALREADY BEING SETUP IN THE DISPLAY CODE
+//	// Set the DAC1 pin to analog mode
+//	//GPIOA->MODER = 0x3 << (2 * 4);
+//	// Disable terminating resistors
+//	GPIOA->PUPDR = 0;
+//	
+//	DAC1->CR |= DAC_CR_EN1;
+//	DAC1->CR |= DAC_CR_BOFF1;
+//	
+//	DAC1->DHR12R1 |= 0xac6;
+	
+	
+	
+	
+	
+	
 	
 	//initFreqCalc();
 
