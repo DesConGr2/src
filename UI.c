@@ -27,6 +27,7 @@ typedef struct UIVals {
 	int dispcount;
 	//0 for off, 1 for on
 	int autoRangeState;
+	int commsState;
 } UIVals;
 
 
@@ -84,7 +85,7 @@ void initUI(void) {
 }
 
 
-void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
+void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState, int* commsState) {
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
@@ -131,6 +132,13 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 				*autoRangeState = 0;
 			}
 		break;
+		case 6:
+			//this button toggles serial comms
+			if(*commsState == 0){
+				*commsState = 1;
+			} else {
+				*commsState = 0;
+			}
 	}
 }
 void display(char *readType[], 
@@ -140,7 +148,8 @@ void display(char *readType[],
 						 char *capacitanceRange[], 
 						 int typeIndex, 
 						 int rangeIndex, 
-						 int autoRangeState) {	
+						 int autoRangeState,
+						 int commsState) {	
 	
 							 
 	//initilise display value
@@ -148,6 +157,10 @@ void display(char *readType[],
 	
 	//display type
 	displayType(readType[typeIndex]);
+							 
+	//display if we are in auto and/or comms mode or not
+	displayAuto(autoRangeState);
+	displayComms(commsState);
 	
 	//display resolution
 	switch(typeIndex){
@@ -161,6 +174,11 @@ void display(char *readType[],
 					displayVal = range1m();
 					// Display to LCD
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;					
 				case 1:
 					displayVal = range10m();
@@ -168,28 +186,45 @@ void display(char *readType[],
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
 					
 				break;					
 				case 2:
 					displayVal = range10m();
-				
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 3:
 					displayVal = range1();
 					displayReading(displayVal);
-				
+					
 					// Attempt to send via uart
+					if(commsState == 1)
 					WriteToOutputString(displayVal);
 					
 				break;
 				case 4:
 					displayVal = range10();
 					displayReading(range10());
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 5:
 					displayVal = testRange();
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 			}
 			
@@ -200,7 +235,46 @@ void display(char *readType[],
 			displayStringRange(currentRange[rangeIndex]);
 		
 			//---- Code for displaying Current reading ----//
-			displayReading(readADC1());
+			switch(rangeIndex){
+				case 0:
+					displayVal = range1m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;					
+				case 1:
+					displayVal = range10m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;					
+				case 2:
+					displayVal = range10m();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				case 3:
+					displayVal = range1();
+					displayReading(displayVal);
+					
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				}
 			//-----------------------------------------//
 		break;			
 		case 2:		//Resistance
@@ -243,8 +317,6 @@ void display(char *readType[],
 		break;
 	}
 	
-	//display if we are in auto mode or not
-	displayAuto(autoRangeState);
 	
 }
 
@@ -272,7 +344,8 @@ void TIM5_IRQHandler(void) {
 					interfaceVals->capacitanceRange, 
 					interfaceVals->typeIndex, 
 					interfaceVals->rangeIndex, 
-					interfaceVals->autoRangeState);	
+					interfaceVals->autoRangeState,
+				  interfaceVals->commsState);	
 	//reset the counter
 	interfaceVals->dispcount = 0;
 	}
@@ -289,7 +362,7 @@ void TIM3_IRQHandler(void) {
 		
 		if(interfaceVals->debCount == 3 && curbtn != 0) {
 			displayClear();
-			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->rangeIndex, &interfaceVals->autoRangeState);
+			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->rangeIndex, &interfaceVals->autoRangeState, &interfaceVals->commsState);
 			interfaceVals->debCount++;
 		} else if(interfaceVals->debCount < 4) {
 			interfaceVals->debCount++;

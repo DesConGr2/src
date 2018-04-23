@@ -7,10 +7,14 @@
 
 //---------------------------------------------------------------//
 // When opening the connection use a baud rate of 25000					 //
-// Initial tests have had the connection at COM6 port						 //
 //---------------------------------------------------------------//
 
 void CommsInit(void) {
+	
+		// Module adapted from Serial_Port_Communication_with_the_FTDI_UM232H.pdf
+	  // Version 0.3 April 2018 - Dave Pearce
+		// Adapted from void PB_FTDI_Init() (Page 6)
+	
 		 // USART2 is connected to the FTDI module via PA2) 
 		 const unsigned int RCC_APB1RSTR = RCC_BASE + 0x20;
 		 const unsigned int USART2_BIT_IN_RCC = RCC_APB1RSTR_USART2RST_Pos;
@@ -41,14 +45,23 @@ void CommsInit(void) {
 }
 
 void PB_FTDI_Wait_Until_Ready() {
+	
+ // Module from Serial_Port_Communication_with_the_FTDI_UM232H.pdf
+ // Version 0.3 April 2018 - Dave Pearce
+ // See void PB_FTDI_Init() (Page 7)
+	
  unsigned int bReady = 0;
  do {
  bReady = USART2->SR & (1UL << 7);
  } while (!bReady);
 } 
 
-
 void PB_FTDI_Send(char *OutString, int howMany) {
+	
+ // Module from Serial_Port_Communication_with_the_FTDI_UM232H.pdf
+ // Version 0.3 April 2018 - Dave Pearce
+ // See void void PB_FTDI_Send()  (Page 7)
+	
  // Sends howMany bytes, starting at the address pointed to by
  // bytes, or until it reaches the end of the string (whichever
  // happens first).
@@ -59,9 +72,7 @@ void PB_FTDI_Send(char *OutString, int howMany) {
  }
 } 
 
-
 void WriteToOutputString(double output) {
-	
 			
 		// Initialise the Output String
 		char *OutString = (char *)malloc(sizeof(double) * 16);
@@ -80,11 +91,12 @@ void WriteToOutputString(double output) {
 		//free(Terminator);
 }
 
-void SendViaSerial(void) {
-	
-}
-
 void PB_FTDI_SendNewLine() {
+	
+ // Module from Serial_Port_Communication_with_the_FTDI_UM232H.pdf
+ // Version 0.3 April 2018 - Dave Pearce
+ // See void void PB_FTDI_SendNewLine()  (Page 7)
+	
  // Does what it says on the tin... sends a CR and LF: 
  PB_FTDI_Wait_Until_Ready();
  USART2->DR = '\r';
