@@ -25,12 +25,14 @@ int main (void) {
 	initDigitalIO();
 	// TODO: change to 'initADC1()' to be consistent with the other naming
 	ADC1Init();
+	
 	initUI();
+	//initDisplay();
 	//CommsInit();
 	
 	// Do DAC things
 //	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-//	RCC->APB1ENR |= RCC_APB1ENR_DACEN;
+//RCC->APB1ENR |= RCC_APB1ENR_DACEN;
 //	
 	// DONT NEED TO ADJUST GPIOA, ITS ALREADY BEING SETUP IN THE DISPLAY CODE
 //	// Set the DAC1 pin to analog mode
@@ -38,10 +40,10 @@ int main (void) {
 //	// Disable terminating resistors
 //	GPIOA->PUPDR = 0;
 //	
-//	DAC1->CR |= DAC_CR_EN1;
-//	DAC1->CR |= DAC_CR_BOFF1;
+	//DAC1->CR |= DAC_CR_EN1;
+	//DAC1->CR |= DAC_CR_BOFF1;
 //	
-//	DAC1->DHR12R1 |= 0xac6;
+	//DAC1->DHR12R1 |= 0xfff;
 	
 	
 	
@@ -58,12 +60,51 @@ int main (void) {
   //displayClear();
 	//turnBuzzerOff();
 	
+//	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
+//	TIM1->PSC = 1;
+//	// SET GPIOE pin 9 to the alternate function
+//	//GPIOE->MODER &= 00 << (2 * 9);
+//	GPIOE->MODER &= 0xFFF3FFFF;
+//	//GPIOE->MODER |= 10 << (2 * 9);
+//	GPIOE->MODER |= 1 << 19;
+//	
+//	//GPIOE->AFR[1] &= 0x0 << (4 * 1);
+//	GPIOE->AFR[1] &= 0xFFFFFF0F;
+//	GPIOE->AFR[1] |= 0x1 << (4 * 1);
+//	
+//	//TIM1->CCMR1 &= 00;
+//	TIM1->CCMR1 &= 0xFFFFFFFC;
+//	TIM1->CCMR1 |= 01;
+//	
+//	// Setting to 0, activate on rising edge
+////	TIM1->CCER &= 0 << 1;
+////	TIM1->CCER &= 0 << 3;
+//	TIM1->CCER &= 0xFFFFFFFD;
+//	TIM1->CCER &= 0xFFFFFFF7;
+//	
+//	//TIM1->CCMR1 &= 00 << 8;
+//	TIM1->CCMR1 &= 0xFFFFFCFF;
+//	TIM1->CCMR1 |= 1 << 9;
+//	
+//	// Setting to 1, activate on falling edge
+//	TIM1->CCER |= 1 << 5;
+//	TIM1->CCER |= 1 << 7;
+//	
+//	//TIM1->SMCR &= 000 << 4;
+//	TIM1->SMCR &= 0xFFFFFF8F;
+//	//TIM1->SMCR |= 101 << 4;
+//	TIM1->SMCR |= 0x00000050;
+//	
+//	//TIM1->SMCR &= 000;
+//	TIM1->SMCR &= 0xFFFFFFF8;
+//	//TIM1->SMCR |= 100;
+//	TIM1->SMCR |= 0x4;
+//	
+//	TIM1->CCER |= 1;
+//	TIM1->CCER |= 1 << 4;
 	
 	while(1) {
-//		if (GPIOE->IDR & 0x0001) GPIOA->ODR |=  0x0040;   // LED on
-//    else                     GPIOA->ODR &= ~0x0040;   // else LED off
-//    if (GPIOE->IDR & 0x0002) UART4->DR = 'a';   // send    
-//    for (int i = 0; i<100000; i++) {};          // waste time
+		 //displayReading(TIM1->CCR1);
 	}
 		
 }

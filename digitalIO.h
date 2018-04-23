@@ -12,7 +12,7 @@ void initDigitalIO(void);
 //											-1  if the function received a value that is out of range
 //											 1  if the write was successful
 // here val can be either 0 or 1, we want to be able to set a pin high or low
-int setPin(int pin, int val);
+int setPin(char *pinLine, int pin, int val);
 
 // Function will return: 
 //										  -1 if the desired pin is not valid											

@@ -9,6 +9,7 @@
 #include "buttons.h"
 #include "FreqCalc.h"
 #include "serial_comms.h"
+#include "digitalIO.h"
 
 typedef struct UIVals {
 	char *readType[5];
@@ -154,6 +155,11 @@ void display(char *readType[],
 		case 0:		//Voltage
 			//Display the range (resolution)
 			displayStringRange(voltageRange[rangeIndex]);
+			
+			// Put the circuit selector ranges out of J5
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 0);
+			setPin("J5", 7, 0);
 		
 			//---- Code for displaying Voltage reading ----//
 			switch(rangeIndex){
@@ -171,7 +177,7 @@ void display(char *readType[],
 					
 				break;					
 				case 2:
-					displayVal = range10m();
+					displayVal = range100m();
 				
 					displayReading(displayVal);
 				break;
@@ -198,14 +204,59 @@ void display(char *readType[],
 		case 1:		//Current
 			//Display the range (resolution)
 			displayStringRange(currentRange[rangeIndex]);
-		
+			
+			// Put the circuit selector ranges out of J5
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 0);
+			setPin("J5", 7, 1);
+		switch(rangeIndex){
+				case 0:
+					displayVal = range1m();
+					// Display to LCD
+					displayReading(displayVal);
+				break;					
+				case 1:
+					displayVal = range10m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					
+				break;					
+				case 2:
+					displayVal = range100m();
+				
+					displayReading(displayVal);
+				break;
+				case 3:
+					displayVal = range1();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					//WriteToOutputString(displayVal);
+					
+				break;
+				case 4:
+					displayVal = range10();
+					displayReading(range10());
+				break;
+				case 5:
+					displayVal = testRange();
+					displayReading(displayVal);
+				break;
+			}
 			//---- Code for displaying Current reading ----//
-			displayReading(readADC1());
+			//displayReading(readADC1());
 			//-----------------------------------------//
 		break;			
 		case 2:		//Resistance
 			//Display the range (resolution)
 			displayStringRange(resistanceRange[0]);
+		
+			// Put the circuit selector ranges out of J5
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 1);
+			setPin("J5", 7, 0);
 		
 			//---- Code for displaying Resistance reading ----//
 			displayReading(readADC1());
@@ -257,7 +308,11 @@ void TIM5_IRQHandler(void) {
 	if(interfaceVals->autoRangeState == 1) {
 		autoRange(interfaceVals->rangeIndex);
 	} else {
-		setRange(interfaceVals->rangeIndex);
+		if(interfaceVals->typeIndex == 1) {
+			setRange(interfaceVals->rangeIndex + 1);
+		} else {
+			setRange(interfaceVals->rangeIndex);
+		}
 	}
 	
 	// Display settings

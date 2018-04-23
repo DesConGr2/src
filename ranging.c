@@ -17,27 +17,27 @@ void setRange(int range) {
 		break;
 		case 1:
 			// 000 for 10m
-			setPin(3, 0);
-			setPin(4, 0);
-			setPin(5, 0);
+			setPin("J7", 3, 0);
+			setPin("J7", 4, 0);
+			setPin("J7", 5, 0);
 		break;
 		case 2:
 			// 001 for 100m
-			setPin(3, 0);
-			setPin(4, 0);
-			setPin(5, 1);
+			setPin("J7", 3, 0);
+			setPin("J7", 4, 0);
+			setPin("J7", 5, 1);
 		break;
 		case 3:
 			// 010 for 1
-			setPin(3, 0);
-			setPin(4, 1);
-			setPin(5, 0);
+			setPin("J7", 3, 0);
+			setPin("J7", 4, 1);
+			setPin("J7", 5, 0);
 		break;
 		case 4:
 			// 011 for 10
-			setPin(3, 0);
-			setPin(4, 1);
-			setPin(5, 1);
+			setPin("J7", 3, 0);
+			setPin("J7", 4, 1);
+			setPin("J7", 5, 1);
 		break;
 	}
 }
