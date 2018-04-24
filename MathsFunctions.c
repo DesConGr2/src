@@ -67,3 +67,4 @@ double testRange(void){
 	double returnVal = (double)value * voltPerBit; 
 	return returnVal;
 }
+
