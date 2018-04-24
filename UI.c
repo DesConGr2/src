@@ -10,13 +10,12 @@
 #include "FreqCalc.h"
 #include "serial_comms.h"
 #include "digitalIO.h"
-#include "DAC.h"
 
 typedef struct UIVals {
 	char *readType[5];
 	char *voltageRange[6];
 	char *currentRange[4];
-	char *resistanceRage[7];
+	char *resistanceRage[1];
 	char *capacitanceRange[3];
 	
 	int typeIndex;
@@ -33,7 +32,7 @@ typedef struct UIVals {
 
 
 UIVals *interfaceVals;
-const int MAXINDEX[5] = {5, 3, 6, 0, 2};
+const int MAXINDEX[5] = {5, 3, 0, 0, 2};
 
 
 void initUI(void) {
@@ -82,13 +81,7 @@ void initUI(void) {
 	interfaceVals->capacitanceRange[2] = "3.0";
 
 	// Unsure about what ranges we have for the resistance
-	interfaceVals->resistanceRage[0] = "1k";
-	interfaceVals->resistanceRage[1] = "5k";
-	interfaceVals->resistanceRage[2] = "10k";
-	interfaceVals->resistanceRage[3] = "50k";
-	interfaceVals->resistanceRage[4] = "100k";
-	interfaceVals->resistanceRage[5] = "500k";
-	interfaceVals->resistanceRage[6] = "1M";
+	interfaceVals->resistanceRage[0] = "1000000";
 }
 
 
@@ -258,94 +251,15 @@ void display(char *readType[],
 		break;			
 		case 2:		//Resistance
 			//Display the range (resolution)
-			displayStringRange(resistanceRange[rangeIndex]);
+			displayStringRange(resistanceRange[0]);
 		
 			// Put the circuit selector ranges out of J5
 			setPin("J5", 4, 0);
 			setPin("J5", 5, 1);
 			setPin("J5", 7, 0);
 		
-			switch(interfaceVals->rangeIndex) {
-				case 0:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 0);
-					setDAC(2.2);
-					{
-						double val = readADC1();
-						double grad = ((1000.0 - 100.0) / (2.1 - 0.19));
-						displayReading(val * grad);
-					}
-				break;
-				case 1:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 1);
-					setDAC(1.9);
-					{
-						double val = readADC1();
-						double grad = ((5000.0 - 1000.0) / (2.8 - 0.55));
-						displayReading(val * grad);
-					}
-				break;
-				case 2:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 1);
-					setDAC(2.2);
-					{
-						double val = readADC1();
-						double grad = ((10000.0 - 5000.0) / (2.72 - 1.4));
-						displayReading(val * grad);
-					}
-				break;
-				case 3:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 0);
-					setDAC(1.9);
-					{
-						double val = readADC1();
-						double grad = ((50000.0 - 10000.0) / (2.77 - 0.56));
-						displayReading(val * grad);
-					}
-				break;
-				case 4:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 0);
-					setDAC(2.2);
-					{
-						double val = readADC1();
-						double grad = ((100000.0 - 50000.0) / (2.55 - 1.36));
-						displayReading(val * grad);
-					}
-				break;
-				case 5:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
-					setDAC(1.9);
-					{
-						double val = readADC1();
-						double grad = ((500000.0 - 100000.0) / (1.91- 0.49));
-						displayReading(val * grad);
-					}
-				break;
-				case 6:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
-					setDAC(2.2);
-					{
-						double val = readADC1();
-						double grad = ((1000000.0 - 500000.0) / (1.39 - 0.94));
-						displayReading(val * grad);
-					}
-				break;
-			}
 			//---- Code for displaying Resistance reading ----//
-			//displayReading(readADC1());
+			displayReading(readADC1());
 			//-----------------------------------------//
 		break;
 		case 3:		//Frequency
@@ -394,7 +308,9 @@ void TIM5_IRQHandler(void) {
 	if(interfaceVals->autoRangeState == 1) {
 		autoRange(interfaceVals->rangeIndex);
 	} else {
-		if(interfaceVals->typeIndex != 2) {
+		if(interfaceVals->typeIndex == 1) {
+			setRange(interfaceVals->rangeIndex + 1);
+		} else {
 			setRange(interfaceVals->rangeIndex);
 		}
 	}
