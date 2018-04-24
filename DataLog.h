@@ -7,14 +7,12 @@ void displayDatalog(void);
 	
 void closeDatalog(void);
 
-double DatalogValue(int value);
+void datalogButton(double value);
 
-void setDataLogSize(int value);
+void cycleDatalogDown(void);
 
-void manualDisplayDecrement(void);
+void cycleDatalogUp(void);
 
-void manualDisplayIncrement(void);
-
-
-
+void sendDatalog(void);
+	
 #endif

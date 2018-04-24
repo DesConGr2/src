@@ -8,12 +8,13 @@
 #include "mathsFunctions.h"
 #include "ranging.h"
 #include "sound_response.h"
+#include "DataLog.h"
 
 void SysTick_Handler(void);
 // Delays number of tick Syst icks (happens every 1 ms)
 void Delay(uint32_t dlyTicks);
-void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex, int *autoRangeState);
-void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState);
+void processButtonPress(int buttonPressed, int *typeIndex, int *rangeIndex, int *autoRangeState, int* datalogMode, int* log);
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState, int *datalogMode, int *log);
 
 
 int main (void) {
@@ -23,7 +24,7 @@ int main (void) {
     while (1);                                  /* Capture error              */
   }
 	//Define the arrays for the user options
-	char *readType[3] = {"V  ", "A  ", "Ohm"};
+	char *readType[6] = {"V         ", "A         ", "Ohm       ", "transistor", "Diode     ", "display   "};
 	double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
 	double currentRange[4] = {0.001, 0.01, 0.1, 1};
 	// Unsure about what ranges we have for the resistance
@@ -35,6 +36,15 @@ int main (void) {
 	//0 for off, 1 for on
 	int *autoRangeState = malloc(sizeof(int));
 	*autoRangeState = 0;
+	
+	//0 for off, 1 for on
+	int *datalogMode = malloc(sizeof(int));
+	*datalogMode = 0;
+	
+	//0 for off, 1 for on
+	int *log = malloc(sizeof(int));
+	*log = 0;
+	
 	
 	//initialise
 	initButtons();
@@ -53,15 +63,16 @@ int main (void) {
 		// Display refresh cycle
 		Delay(200);
 		// Check button press
-		processButtonPress(getButtonPressed(), typeIndex, voltageRangeIndex, autoRangeState);
+		processButtonPress(getButtonPressed(), typeIndex, voltageRangeIndex, autoRangeState, datalogMode, log);
 		// Adjust the internal settings based on user input
 		if(*autoRangeState == 1) {
-			autoRange(voltageRangeIndex);
+			autoRange(*voltageRangeIndex);
 		} else {
 			setRange(*voltageRangeIndex);
 		}
+			
 		// Display settings
-		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState);
+		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState, datalogMode, log);
 	}		
 }
 
@@ -96,11 +107,11 @@ void Delay (uint32_t dlyTicks) {
 // https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
 // https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
 //----------------------------------------------------------------------------*/
-void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
+void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState, int* datalogMode, int* log) {
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
-			if(*typeIndex == 2) {
+			if(*typeIndex == 5) {
 				*typeIndex = 0;
 			} else {
 				++*typeIndex;
@@ -109,13 +120,17 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		case 2:
 			//this button decrements read type
 			if(*typeIndex == 0) {
-				*typeIndex = 2;
+				*typeIndex = 5;
 			} else {
 				--*typeIndex;
 			}
 		break;				
 		case 3:
-			if(*autoRangeState == 0){
+			//Used to cycle through the datalog
+			if(*typeIndex == 5)
+			{
+				cycleDatalogUp();
+			}else if(*autoRangeState == 0){
 				//this button increments range type
 				if(*rangeIndex == 4) {
 					*rangeIndex = 0;
@@ -125,7 +140,11 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 			}
 		break;				
 		case 4:
-			if(*autoRangeState == 0){
+			//Used to cycle through the datalog
+			if(*typeIndex == 5)
+			{
+				cycleDatalogDown();
+			}else if(*autoRangeState == 0){
 				//this button decrements range type
 				if(*rangeIndex == 0) {
 					*rangeIndex = 4;
@@ -142,10 +161,23 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 				*autoRangeState = 0;
 			}
 		break;
+	case 7:
+		//this button adds value to datalog
+		if(*typeIndex == 0 || *typeIndex == 1 || *typeIndex == 2){
+			if(*log == 1){
+				*log = 0;
+			} else {
+				*log = 1;
+			}
+	} 
+	break;
+	case 8:
+		sendDatalog();
+	break;
 	}
 }
 
-void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState) {	
+void display(char *readType[], double voltageRange[], double currentRange[], double resistanceRange[], int *typeIndex, int *rangeIndex, int *autoRangeState, int *datalogMode, int *log) {	
 	
 	//display type
 	displayType(readType[*typeIndex]);
@@ -160,18 +192,38 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 			switch(*rangeIndex){
 				case 0:
 						displayReading(range1m());
+						if(*log == 1){
+							datalogButton(range1m());
+							*log = 0;
+						}
 				break;					
 				case 1:
 					displayReading(range10m());
+					if(*log == 1){
+								datalogButton(range10m());
+								*log = 0;
+							}
 				break;					
 				case 2:
 					displayReading(range100m());
+					if(*log == 1){
+							datalogButton(range100m());
+							*log = 0;
+						}
 				break;
 				case 3:
 					displayReading(range1());
+					if(*log == 1){
+							datalogButton(range1());
+							*log = 0;
+						}
 				break;
 				case 4:
 					displayReading(range10());
+					if(*log == 1){
+							datalogButton(range10());
+							*log = 0;
+						}
 				break;
 			}
 			
@@ -192,6 +244,15 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 			//---- Code for displaying the reading ----//
 			displayReading(readADC1());
 			//-----------------------------------------//
+		break;
+		case 3: 
+			displayReading(range10());
+			displayTransistor(range10());
+		
+		break;
+		case 4:
+			displayReading(range10());
+			displayDiode(range10());	
 		break;
 	}
 	

@@ -12,6 +12,10 @@ void displayClear(void);
 //void displayInt(int value);
 void displayRange(double value);
 void displayAuto(int toggle);
-
+void displayLog(char *string);
+void displayDatalogValue(double value);
+void displayTransistor(double value);
+void displayDiode(double value);
+void displayDatalogValueClear(void);
 
 #endif
