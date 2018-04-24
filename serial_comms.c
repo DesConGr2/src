@@ -30,17 +30,25 @@ void CommsInit(void) {
 		 // / 104 = 9600. That's less than 0.2% out, and it’s close
 		 // enough. (Note: this works up to 1 MBaud.)
 		 USART2->BRR = 104 << 4; // Set for 9600 baud
-		 USART2->CR1 = (1UL << 13) | (1UL << 3);
+		 //USART2->CR1 = (1UL << 13) | (1UL << 3);
+		 USART2->CR1 |= USART_CR1_TE | USART_CR1_UE;
 
 		 // Turn clock to GPIOA on, set-up PA2 as an output, and configure
 		 // PA2 to take input from USART2 (note you have to turn the clock
 		 // on before writing to the register):
 		 RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-		 GPIOA->AFR[0] = (GPIOA->AFR[0] & 0xFFFFF0FF) | (0x7 << 8);
+		 //GPIOA->AFR[0] = (GPIOA->AFR[0] & 0xFFFFF0FF) | (0x7 << 8);
+		 GPIOA->MODER &= ~GPIO_MODER_MODE2_Msk;
+		 GPIOA->MODER |= GPIO_MODER_MODE2_1;
+		 
+		 GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_0;
+		 GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_1;
+		 GPIOA->AFR[0] |= GPIO_AFRL_AFRL2_2;
+		 GPIOA->AFR[0] &= ~GPIO_AFRL_AFRL2_3;
 		 // Set mode to alternate function IO push-pull output:
-		 unsigned int bit = 2;
-		 unsigned long bitMask = ~(3UL << 2*bit);
-		 GPIOA->MODER = (GPIOA->MODER & bitMask) | (2UL << 2*bit); 
+		 //unsigned int bit = 2;
+		 //unsigned long bitMask = ~(3UL << 2*bit);
+		 
 
 }
 
