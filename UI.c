@@ -5,7 +5,7 @@
 #include "lcdDisplay.h"
 #include "mathsFunctions.h"
 #include "ADC.h"
-#include "hardwareSelection.h"
+#include "ranging.h"
 #include "buttons.h"
 #include "FreqCalc.h"
 #include "serial_comms.h"
@@ -44,9 +44,9 @@ void initUI(void) {
 	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
 	NVIC_EnableIRQ(TIM5_IRQn);    // Enable IRQ for TIM5 in NVIC
 
-	TIM5->ARR     = 10*84000;    // Auto Reload Register value =>
-	TIM5->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-	TIM5->CR1    |= 0x0001;       // Enable Counting
+  TIM5->ARR     = 10*84000;    // Auto Reload Register value =>
+  TIM5->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
+  TIM5->CR1    |= 0x0001;       // Enable Counting
 	
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 	
@@ -90,6 +90,7 @@ void initUI(void) {
 	interfaceVals->resistanceRage[5] = "500k";
 	interfaceVals->resistanceRage[6] = "1M";
 }
+
 
 void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
 	switch(buttonPressed){
@@ -140,72 +141,60 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		break;
 	}
 }
-
 void display(char *readType[], 
-			 char *voltageRange[], 
-			 char *currentRange[], 
-			 char *resistanceRange[], 
-			 char *capacitanceRange[], 
-			 int typeIndex, 
-			 int rangeIndex, 
-			 int autoRangeState) 
-{	
+						 char *voltageRange[], 
+						 char *currentRange[], 
+						 char *resistanceRange[], 
+						 char *capacitanceRange[], 
+						 int typeIndex, 
+						 int rangeIndex, 
+						 int autoRangeState) {	
+	
+							 
+	//initilise display value
 	double displayVal;
 	
+	//display type
 	displayType(readType[typeIndex]);
-
-	switch(typeIndex){
-		//Voltage
-		case 0:		
-			displayStringRange(voltageRange[rangeIndex]);
-
-			switch(rangeIndex){
-				case 0:
-					displayVal = range1m();			
-					displayReading(displayVal);
-				break;					
-				case 1:
-					displayVal = range10m();					
-					displayReading(displayVal);									
-				break;					
-				case 2:
-					displayVal = range100m();				
-					displayReading(displayVal);
-				break;
-				case 3:
-					displayVal = range1();
-					displayReading(displayVal);					
-				break;
-				case 4:
-					displayVal = range10();
-					displayReading(range10());
-				break;
-				case 5:
-					displayVal = testRange();
-					displayReading(displayVal);
-				break;
-			}
-		break;
-		//Current
-		case 1:					
-			displayStringRange(currentRange[rangeIndex]);
 	
+	//display resolution
+	switch(typeIndex){
+		case 0:		//Voltage
+			//Display the range (resolution)
+			displayStringRange(voltageRange[rangeIndex]);
+			
+			// Put the circuit selector ranges out of J5
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 0);
+			setPin("J5", 7, 0);
+		
+			//---- Code for displaying Voltage reading ----//
 			switch(rangeIndex){
 				case 0:
 					displayVal = range1m();
+					// Display to LCD
 					displayReading(displayVal);
 				break;					
 				case 1:
 					displayVal = range10m();
-					displayReading(displayVal);														
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					
 				break;					
 				case 2:
-					displayVal = range100m();				
+					displayVal = range100m();
+				
 					displayReading(displayVal);
 				break;
 				case 3:
 					displayVal = range1();
-					displayReading(displayVal);																			
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					//WriteToOutputString(displayVal);
+					
 				break;
 				case 4:
 					displayVal = range10();
@@ -216,8 +205,57 @@ void display(char *readType[],
 					displayReading(displayVal);
 				break;
 			}
+			
+			//-----------------------------------------//
+		break;
+		case 1:		//Current
+			//Display the range (resolution)
+			displayStringRange(currentRange[rangeIndex]);
+			
+			// Put the circuit selector ranges out of J5
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 0);
+			setPin("J5", 7, 1);
+		switch(rangeIndex){
+				case 0:
+					displayVal = range1m();
+					// Display to LCD
+					displayReading(displayVal);
+				break;					
+				case 1:
+					displayVal = range10m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					
+				break;					
+				case 2:
+					displayVal = range100m();
+				
+					displayReading(displayVal);
+				break;
+				case 3:
+					displayVal = range1();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					//WriteToOutputString(displayVal);
+					
+				break;
+				case 4:
+					displayVal = range10();
+					displayReading(range10());
+				break;
+				case 5:
+					displayVal = testRange();
+					displayReading(displayVal);
+				break;
+			}
+			//---- Code for displaying Current reading ----//
+			//displayReading(readADC1());
+			//-----------------------------------------//
 		break;			
-<<<<<<< HEAD
 		case 2:		//Resistance
 			//Display the range (resolution)
 			displayStringRange(resistanceRange[rangeIndex]);
@@ -233,14 +271,6 @@ void display(char *readType[],
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 					setDAC(2.2);
-=======
-		//Resistance
-		case 2:		
-			displayStringRange(resistanceRange[rangeIndex]);		
-		
-			switch(interfaceVals->rangeIndex) {
-				case 0:
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((1000.0 - 100.0) / (2.1 - 0.19));
@@ -248,14 +278,10 @@ void display(char *readType[],
 					}
 				break;
 				case 1:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 					setDAC(1.9);
-=======
-
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((5000.0 - 1000.0) / (2.8 - 0.55));
@@ -263,13 +289,10 @@ void display(char *readType[],
 					}
 				break;
 				case 2:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 					setDAC(2.2);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((10000.0 - 5000.0) / (2.72 - 1.4));
@@ -277,13 +300,10 @@ void display(char *readType[],
 					}
 				break;
 				case 3:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 					setDAC(1.9);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((50000.0 - 10000.0) / (2.77 - 0.56));
@@ -291,13 +311,10 @@ void display(char *readType[],
 					}
 				break;
 				case 4:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 					setDAC(2.2);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((100000.0 - 50000.0) / (2.55 - 1.36));
@@ -305,13 +322,10 @@ void display(char *readType[],
 					}
 				break;
 				case 5:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 					setDAC(1.9);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((500000.0 - 100000.0) / (1.91- 0.49));
@@ -319,13 +333,10 @@ void display(char *readType[],
 					}
 				break;
 				case 6:
-<<<<<<< HEAD
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 					setDAC(2.2);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 					{
 						double val = readADC1();
 						double grad = ((1000000.0 - 500000.0) / (1.39 - 0.94));
@@ -333,20 +344,17 @@ void display(char *readType[],
 					}
 				break;
 			}
-<<<<<<< HEAD
 			//---- Code for displaying Resistance reading ----//
 			//displayReading(readADC1());
 			//-----------------------------------------//
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 		break;
-		//Frequency
-		case 3:		
+		case 3:		//Frequency
 			displayReading(getAveragedFrequency());
 			//displayReading(getPeriod());
 		break;
-		//Capacitance
-		case 4:							
+		case 4:		//Capacitance
+			
+		//---- Code for displaying Resistance reading ----//
 			displayStringRange(capacitanceRange[rangeIndex]);
 			if(rangeIndex == 0) {
 				// Hacky way of addressing things for harry 
@@ -368,30 +376,27 @@ void display(char *readType[],
 			}
 			
 			displayReading(getPeriod());
+			//-----------------------------------------//
 		break;
 	}
 	
 	//display if we are in auto mode or not
 	displayAuto(autoRangeState);
+	
 }
 
 void TIM5_IRQHandler(void) {
- 	// clear IRQ flag in TIM5
- 	TIM5->SR &= ~0x00000001;      
+	// JJ's button Handler!!! LOLS
+	// Debounce the shitting button
+  TIM5->SR &= ~0x00000001;      // clear IRQ flag in TIM5
 	
-	setModule(interfaceVals->typeIndex);
-
+	// Adjust the internal settings based on user input
 	if(interfaceVals->autoRangeState == 1) {
 		autoRange(interfaceVals->rangeIndex);
-<<<<<<< HEAD
 	} else {
 		if(interfaceVals->typeIndex != 2) {
 			setRange(interfaceVals->rangeIndex);
 		}
-=======
-	} else {	
-		setRange(interfaceVals->rangeIndex);
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 	}
 	
 	// Display settings
@@ -409,12 +414,12 @@ void TIM5_IRQHandler(void) {
 					interfaceVals->autoRangeState);	
 	//reset the counter
 	interfaceVals->dispcount = 0;
-	}	
+	}
+	
 }
 
 void TIM3_IRQHandler(void) {
-	// clear IRQ flag in TIM3
-	TIM3->SR &= ~0x00000001;      
+	TIM3->SR &= ~0x00000001;      // clear IRQ flag in TIM3
 	
 	// Check button press
 	int curbtn = getButtonPressed();
@@ -436,16 +441,3 @@ void TIM3_IRQHandler(void) {
 	}
 }
 
-
-/*---------------------------------------------------------------------------------//
-// Code to deal with the user interface and the screen refresh rate...		       //
-// Multithreading would be ideal but fork() and <sys/types.h> are Os related       //
-// libraries and functions, so no good for development board. Investigate 	       //
-// other ways of threading, but for now will use time slicing for system	       //
-// Coded by: jjds502								  						       //
-// Inital version: 23/03/2018												       //
-// Consider using interrupts...												       //
-//																			       //
-// https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/					       //
-// https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/     //
-//---------------------------------------------------------------------------------*/

@@ -9,20 +9,25 @@
 #include "UI.h"
 #include "serial_comms.h"
 #include "DAC.h"
-<<<<<<< HEAD
 
 //void SysTick_Handler(void);
 //// Delays number of tick Syst icks (happens every 1 ms)
 //void Delay(uint32_t dlyTicks);
-=======
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 
 int main (void) {
+
+	//Control of system clock
+//  SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
+//  if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
+//    while (1);                                  /* Capture error              */
+//  }
+	
+	//initialise
 	initDigitalIO();
 	// TODO: change to 'initADC1()' to be consistent with the other naming
 	ADC1Init();
+	
 	initUI();
-<<<<<<< HEAD
 	
 	initDAC();
 	
@@ -59,9 +64,6 @@ int main (void) {
 	//Delay(1000);
   //displayClear();
 	//turnBuzzerOff();
-=======
-	initDAC();
->>>>>>> fe4522e522cf09d5f0037212e63f9f2aacfe281e
 	
 //	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
 //	TIM1->PSC = 1;
@@ -112,7 +114,36 @@ int main (void) {
 		
 }
 
+//// Counts 1ms timeTicks
+//volatile uint32_t msTicks;
+///*----------------------------------------------------------------------------
+//  SysTick_Handler
+// *----------------------------------------------------------------------------*/
+//void SysTick_Handler(void) {
+//  msTicks++;
+//}
+///*----------------------------------------------------------------------------
+//  delays number of tick Systicks (happens every 1 ms)
+// *----------------------------------------------------------------------------*/
+//void Delay (uint32_t dlyTicks) {                                              
+//  uint32_t curTicks;
 
+//  curTicks = msTicks;
+//  while ((msTicks - curTicks) < dlyTicks);
+//}
+
+///*----------------------------------------------------------------------------//
+//// Code to deal with the user interface and the screen refresh rate...				//
+//// Multithreading would be ideal but fork() and <sys/types.h> are Os related	//
+//// libraries and functions, so no good for development board. Investigate 		//
+//// other ways of threading, but for now will use time slicing for system			//
+//// Coded by: jjds502																													//
+//// Inital version: 23/03/2018																									//
+//// Consider using interrupts...																								//
+////																																						//
+//// https://www.fmf.uni-lj.si/~ponikvar/STM32F407%20project/										//
+//// https://stm32f4-discovery.net/2014/08/stm32f4-external-interrupts-tutorial/
+////----------------------------------------------------------------------------*/
 
 
 
