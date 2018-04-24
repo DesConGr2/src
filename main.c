@@ -8,6 +8,7 @@
 #include "freqCalc.h"
 #include "UI.h"
 #include "serial_comms.h"
+#include "DAC.h"
 
 //void SysTick_Handler(void);
 //// Delays number of tick Syst icks (happens every 1 ms)
@@ -27,6 +28,10 @@ int main (void) {
 	ADC1Init();
 	
 	initUI();
+	
+	initDAC();
+	
+	//setDAC(1.0);
 	//initDisplay();
 	//CommsInit();
 	
