@@ -6,8 +6,8 @@
 
 
 //---------------------------------------------------------------//
-// When opening the connection use a baud rate of 25000					 //
-// Initial tests have had the connection at COM6 port						 //
+// When opening the connection use a baud rate of 25000			 //
+// Initial tests have had the connection at COM6 port			 //
 //---------------------------------------------------------------//
 
 void CommsInit(void) {
@@ -61,8 +61,6 @@ void PB_FTDI_Send(char *OutString, int howMany) {
 
 
 void WriteToOutputString(double output) {
-	
-			
 		// Initialise the Output String
 		char *OutString = (char *)malloc(sizeof(double) * 16);
 		//char *Terminator = (char *)malloc(sizeof(char));
@@ -80,9 +78,7 @@ void WriteToOutputString(double output) {
 		//free(Terminator);
 }
 
-void SendViaSerial(void) {
-	
-}
+void SendViaSerial(void) {}
 
 void PB_FTDI_SendNewLine() {
  // Does what it says on the tin... sends a CR and LF: 
