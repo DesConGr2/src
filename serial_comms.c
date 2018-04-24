@@ -73,7 +73,7 @@ void PB_FTDI_Send(char *OutString, int howMany) {
 } 
 
 void WriteToOutputString(double output) {
-			
+
 		// Initialise the Output String
 		char *OutString = (char *)malloc(sizeof(double) * 16);
 		sprintf(OutString, "%.4f", output);
@@ -84,6 +84,7 @@ void WriteToOutputString(double output) {
 	
 		free(OutString);
 }
+
 
 void WriteDataLogMessage() {
 	

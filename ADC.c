@@ -59,7 +59,7 @@ void ADC2Init(void) {
 	
 	/* ADC12_IN15 is the channel we shall use. It is connected to 
 	 * PC5 which is connected to the board edge connectors */
-	GPIOC->MODER = 0x4 << (2 * 4);
+	GPIOC->MODER = 0x3 << (2 * 5);
 	GPIOC->PUPDR = 0;
 	
 	/* Set ADC to discontinuous conversion mode. */

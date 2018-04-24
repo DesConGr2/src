@@ -8,64 +8,43 @@ typedef struct FreqVals {
 	int lastReadVal;
 	int hasStartedTiming;
 	double timerCount;
+	double averages[10];
 } FreqVals;
 
 FreqVals *vals;
 
 void initFreqCalc(void) {
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 
-	TIM2->ARR     = 84;        // Auto Reload Register value => 1ms
-  TIM2->DIER   |= 0x0001;       // DMA/IRQ Enable Register - enable IRQ on update
-  TIM2->CR1    |= 0x0001;       // Enable Counting
+	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
 	
-	NVIC_EnableIRQ(TIM2_IRQn);    // Enable IRQ for TIM2 in NVIC
+	GPIOA->MODER &= ~GPIO_MODER_MODE6_Msk;
+	GPIOA->MODER |= GPIO_MODER_MODE6_1;
 	
-	vals = malloc(sizeof(FreqVals));
+	GPIOA->AFR[0] &= ~GPIO_AFRL_AFRL6;
+	GPIOA->AFR[0] &= ~GPIO_AFRL_AFRL6_0;
+	GPIOA->AFR[0] |= GPIO_AFRL_AFRL6_1;
+	GPIOA->AFR[0] &= ~GPIO_AFRL_AFRL6_2;
+	GPIOA->AFR[0] &= ~GPIO_AFRL_AFRL6_3;
+	TIM3->CCMR1 |= TIM_CCMR1_CC1S_0;
 	
-	vals->hasStartedTiming = 0;
-	vals->lastReadVal = 0;
-	vals->timerCount = 0;
-}
-
-double getFrequency() {
-	double freq = 1.0f / (vals->timerCount);
-	return freq;
-}
-
-double getPeriod() {
-	//return (vals->timerCount / 1000000.0f);
-	return (vals->timerCount);
-}
-
-void startFreqCalc(void) {
-	TIM2->CR1 |= 0x0001;       // Enable Counting
-}
-
-void stopFreqCalc(void) {
-	TIM2->CR1 &= ~0x0001;       // Disable Counting
-}
-
-void TIM2_IRQHandler(void) {
-	TIM2->SR &= ~TIM_SR_UIF;      // clear IRQ flag in TIM2
-	//vals->timerCount += (8400 / 1000000.0f);
-	//vals->timerCount += (TIM2->ARR / 84000000.0f);
-	int rdVal = readPin(15);
+	TIM3->CCER &= ~TIM_CCER_CC1P;
+	TIM3->CCER &= ~TIM_CCER_CC1NP; 
 	
-	if((rdVal == 1) && (vals->lastReadVal == 0)) {
-		if(vals->hasStartedTiming == 0) {
-			vals->hasStartedTiming = 1;
-			vals->timerCount = 0.0f;
-		} else {
-			vals->hasStartedTiming = 0;
-		}
-	} else {
-		if(vals->hasStartedTiming == 1) {
-			//vals->timerCount++;
-			
-			//vals->timerCount += (((float)TIM2->CNT + (float)TIM2->ARR) / 84000000.0f);
-			vals->timerCount += (((float)TIM2->ARR) / 84000000.0f);
-		}
-	}
+	TIM3->CCMR1 |= TIM_CCMR1_CC2S_1;
 	
-	vals->lastReadVal = rdVal;
+	TIM3->CCER |= TIM_CCER_CC2P;
+	TIM3->CCER |= TIM_CCER_CC2NP;
+	
+	TIM3->SMCR |= TIM_SMCR_TS_0;
+	TIM3->SMCR &= ~TIM_SMCR_TS_1;
+	TIM3->SMCR |= TIM_SMCR_TS_2;
+	
+	TIM3->SMCR &= ~TIM_SMCR_SMS_0;
+	TIM3->SMCR &= ~TIM_SMCR_SMS_1;
+	TIM3->SMCR |= TIM_SMCR_SMS_2;
+	
+	TIM3->CCER |= TIM_CCER_CC1E;
+	TIM3->CCER |= TIM_CCER_CC2E;
+	
+	TIM3->CR1 |= TIM_CR1_CEN;
 }
