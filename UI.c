@@ -14,9 +14,9 @@
 
 typedef struct UIVals {
 	char *readType[5];
-	char *voltageRange[6];
+	char *voltageRange[10];
 	char *currentRange[4];
-	char *resistanceRage[7];
+	char *resistanceRange[7];
 	char *capacitanceRange[3];
 	
 	int typeIndex;
@@ -34,7 +34,7 @@ typedef struct UIVals {
 
 
 UIVals *interfaceVals;
-const int MAXINDEX[5] = {5, 3, 6, 0, 2};
+const int MAXINDEX[5] = {9, 3, 6, 0, 2};
 
 
 void initUI(void) {
@@ -71,7 +71,12 @@ void initUI(void) {
 	interfaceVals->voltageRange[2] =  "0.1";
 	interfaceVals->voltageRange[3] =  "1.0";
 	interfaceVals->voltageRange[4] = "10.0";
-	interfaceVals->voltageRange[5] = "Test";
+	interfaceVals->voltageRange[5] =  "0.001 AC";
+	interfaceVals->voltageRange[6] =  "0.01 AC";
+	interfaceVals->voltageRange[7] =  "0.1 AC";
+	interfaceVals->voltageRange[8] =  "1.0 AC";
+	interfaceVals->voltageRange[9] = "10.0 AC";
+	
 	
 	interfaceVals->currentRange[0] = "0.001";
 	interfaceVals->currentRange[1] = "0.01";
@@ -83,13 +88,13 @@ void initUI(void) {
 	interfaceVals->capacitanceRange[2] = "3.0";
 
 	// Unsure about what ranges we have for the resistance
-	interfaceVals->resistanceRage[0] = "1k";
-	interfaceVals->resistanceRage[1] = "5k";
-	interfaceVals->resistanceRage[2] = "10k";
-	interfaceVals->resistanceRage[3] = "50k";
-	interfaceVals->resistanceRage[4] = "100k";
-	interfaceVals->resistanceRage[5] = "500k";
-	interfaceVals->resistanceRage[6] = "1M";
+	interfaceVals->resistanceRange[0] = "1k";
+	interfaceVals->resistanceRange[1] = "5k";
+	interfaceVals->resistanceRange[2] = "10k";
+	interfaceVals->resistanceRange[3] = "50k";
+	interfaceVals->resistanceRange[4] = "100k";
+	interfaceVals->resistanceRange[5] = "500k";
+	interfaceVals->resistanceRange[6] = "1M";
 }
 
 
@@ -228,7 +233,43 @@ void display(char *readType[],
 					
 				break;
 				case 5:
-					displayVal = testRange();
+					displayVal = range1m();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				case 6:
+					displayVal = range10m();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				case 7:
+					displayVal = range100m();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				case 8:
+					displayVal = range1();
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;
+				case 9:
+					displayVal = range10();
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -344,7 +385,8 @@ void display(char *readType[],
 		break;
 		//Frequency
 		case 3:		
-			displayIntReading((double)84000000 / (double)TIM3->CCR1);
+			//displayIntReading((double)84000000 / (double)TIM3->CCR1);
+			displayReading((double)84000000 / (double)TIM3->CCR1);
 			//displayReading(getPeriod());
 		break;
 		//Capacitance
@@ -395,7 +437,7 @@ void TIM5_IRQHandler(void) {
 	display(interfaceVals->readType, 
 					interfaceVals->voltageRange, 
 					interfaceVals->currentRange, 
-					interfaceVals->resistanceRage, 
+					interfaceVals->resistanceRange, 
 					interfaceVals->capacitanceRange, 
 					interfaceVals->typeIndex, 
 					interfaceVals->rangeIndex, 

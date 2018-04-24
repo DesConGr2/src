@@ -10,10 +10,16 @@
 
 // Ranges:
 // Voltage:
-// 0 - 10m  - 000
-// 1 - 100m - 001
-// 2 - 1    - 010
-// 3 - 10   - 011
+// 0 - 1m      - 000
+// 1 - 10m     - 000
+// 2 - 100m    - 001
+// 3 - 1       - 010
+// 4 - 10      - 011
+// 5 - 1m AC   - 100
+// 6 - 10m AC  - 100
+// 7 - 100m AC - 101
+// 8 - 1 AC    - 110
+// 9 - 10 AC   - 111
 // Current:
 // Idk yet
 // Resistance:
@@ -28,6 +34,7 @@
 // idk if this even needs to be here
 // Capacitace:
 // idk yet
+// ADD A RANGE WHICH Is JUST RESISTANCE BUT BUZZES OUT OF RANGE
 
 
 

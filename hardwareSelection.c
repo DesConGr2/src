@@ -35,26 +35,62 @@ void setRange(int module, int range) {
 		case 0:
 			switch(range) {
 				case 0:
-					// 10m
+					// 1m
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
 				case 1:
+					// 10m
+					setPin("J7", 3, 0);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;
+				case 2:
 					// 100m
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 				break;
-				case 2:
+				case 3:
 					// 1
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				break;
-				case 3:
+				case 4:
 					// 10
 					setPin("J7", 3, 0);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 1);
+				break;
+				case 5:
+					// 1m AC
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;
+				case 6:
+					// 10m AC
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;
+				case 7:
+					// 100m AC
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 1);
+				break;
+				case 8:
+					// 1 AC
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 0);
+				break;
+				case 9:
+					// 10 AC
+					setPin("J7", 3, 1);
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 				break;
