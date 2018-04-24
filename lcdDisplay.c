@@ -43,6 +43,17 @@ void displayReading(double value) {
 	free(displayValue);
 }
 
+void displayIntReading(int value) {
+	char *displayValue = (char *)malloc(sizeof(int) * 16);
+
+	sprintf(displayValue, "%i", value);
+	
+	displayStringReading(displayValue);
+	
+	//bug fix by JJ, need to dealloc mem
+	free(displayValue);
+}
+
 void displayRange(double value) {
 	char *displayValue = (char *)malloc(sizeof(double) * 16);
 

@@ -7,6 +7,7 @@ void initDisplay(void);
 void displayType(char *string);
 void displayStringRange(char *string);
 void displayReading(double value);
+void displayIntReading(int value);
 void displayClear(void);
 // Display an integer value on the LCD display
 //void displayInt(int value);
