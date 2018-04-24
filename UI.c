@@ -41,6 +41,7 @@ void initUI(void) {
 	initButtons();
 	initDisplay();
 	initFreqCalc();
+	CommsInit();
 	// Init the display timer
 	RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
 	NVIC_EnableIRQ(TIM5_IRQn);    // Enable IRQ for TIM5 in NVIC
