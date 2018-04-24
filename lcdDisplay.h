@@ -13,6 +13,7 @@ void displayClear(void);
 //void displayInt(int value);
 void displayRange(double value);
 void displayAuto(int toggle);
+void displayComms(int toggle);
 
 
 #endif

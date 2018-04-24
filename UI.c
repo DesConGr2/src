@@ -29,6 +29,7 @@ typedef struct UIVals {
 	int dispcount;
 	//0 for off, 1 for on
 	int autoRangeState;
+	int commsState;
 } UIVals;
 
 
@@ -91,7 +92,8 @@ void initUI(void) {
 	interfaceVals->resistanceRage[6] = "1M";
 }
 
-void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState) {
+
+void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int* autoRangeState, int* commsState) {
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
@@ -138,21 +140,40 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 				*autoRangeState = 0;
 			}
 		break;
+		case 6:
+			//this button toggles serial comms
+			if(*commsState == 0){
+				*commsState = 1;
+			} else {
+				*commsState = 0;
+			}
 	}
 }
 
 void display(char *readType[], 
-			 char *voltageRange[], 
-			 char *currentRange[], 
-			 char *resistanceRange[], 
-			 char *capacitanceRange[], 
-			 int typeIndex, 
-			 int rangeIndex, 
-			 int autoRangeState) 
-{	
+						 char *voltageRange[], 
+						 char *currentRange[], 
+						 char *resistanceRange[], 
+						 char *capacitanceRange[], 
+						 int typeIndex, 
+						 int rangeIndex, 
+						 int autoRangeState,
+						 int commsState) {	
+	
+							 
+	//initilise display value
+
 	double displayVal;
 	
 	displayType(readType[typeIndex]);
+
+							 
+	//display if we are in auto and/or comms mode or not
+	displayAuto(autoRangeState);
+	displayComms(commsState);
+	
+
+
 
 	switch(typeIndex){
 		//Voltage
@@ -163,59 +184,106 @@ void display(char *readType[],
 				case 0:
 					displayVal = range1m();			
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;					
 				case 1:
-					displayVal = range10m();					
-					displayReading(displayVal);									
-				break;					
+
+					displayVal = range10m();
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
+				break;									
 				case 2:
 					displayVal = range100m();				
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 3:
 					displayVal = range1();
-					displayReading(displayVal);					
+					displayReading(displayVal);
+					
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
 				break;
 				case 4:
 					displayVal = range10();
 					displayReading(range10());
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 5:
 					displayVal = testRange();
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 			}
 		break;
 		//Current
 		case 1:					
 			displayStringRange(currentRange[rangeIndex]);
-	
+		
+			//---- Code for displaying Current reading ----//
 			switch(rangeIndex){
 				case 0:
 					displayVal = range1m();
+					// Display to LCD
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;					
 				case 1:
 					displayVal = range10m();
-					displayReading(displayVal);														
+					// Display to LCD
+					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;					
 				case 2:
-					displayVal = range100m();				
+					displayVal = range10m();
 					displayReading(displayVal);
+				
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
 				case 3:
 					displayVal = range1();
-					displayReading(displayVal);																			
-				break;
-				case 4:
-					displayVal = range10();
-					displayReading(range10());
-				break;
-				case 5:
-					displayVal = testRange();
 					displayReading(displayVal);
+					
+					// Attempt to send via uart
+					if(commsState == 1)
+					WriteToOutputString(displayVal);
+					
 				break;
-			}
+				}
+			//-----------------------------------------//
 		break;			
 		//Resistance
 		case 2:		
@@ -305,8 +373,6 @@ void display(char *readType[],
 		break;
 	}
 	
-	//display if we are in auto mode or not
-	displayAuto(autoRangeState);
 }
 
 void TIM5_IRQHandler(void) {
@@ -333,7 +399,8 @@ void TIM5_IRQHandler(void) {
 					interfaceVals->capacitanceRange, 
 					interfaceVals->typeIndex, 
 					interfaceVals->rangeIndex, 
-					interfaceVals->autoRangeState);	
+					interfaceVals->autoRangeState,
+				  interfaceVals->commsState);	
 	//reset the counter
 	interfaceVals->dispcount = 0;
 	}	
@@ -350,7 +417,7 @@ void TIM2_IRQHandler(void) {
 		
 		if(interfaceVals->debCount == 3 && curbtn != 0) {
 			displayClear();
-			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->rangeIndex, &interfaceVals->autoRangeState);
+			processButtonPress(curbtn, &interfaceVals->typeIndex, &interfaceVals->rangeIndex, &interfaceVals->autoRangeState, &interfaceVals->commsState);
 			interfaceVals->debCount++;
 		} else if(interfaceVals->debCount < 4) {
 			interfaceVals->debCount++;

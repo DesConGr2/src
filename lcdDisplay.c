@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 void initDisplay(void) {
+	lcd_change_settings(LCD_POWER_OFF, LCD_CURSOR_OFF, LCD_CBLINK_OFF);
 	lcd_change_settings(LCD_POWER_ON, LCD_CURSOR_OFF, LCD_CBLINK_OFF);
 	
 	lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 16);
@@ -71,6 +72,15 @@ void displayAuto(int toggle) {
 			lcd_write_string("A", 0, 15);
 		} else {
 			lcd_write_string(" ", 0, 15);
+		}
+}
+
+void displayComms(int toggle) {
+		//simply display an A if auto ranging is on
+		if(toggle == 1){
+			lcd_write_string("S", 0, 14);
+		} else {
+			lcd_write_string(" ", 0, 14);
 		}
 }
 
