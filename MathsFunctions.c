@@ -136,11 +136,18 @@ double resistanceRange1k(uint32_t ADCValue) {
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (-0.029286)) / 0.0021069);
-	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) - (-0.029286)) / 0.0021069);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) - (0.00035714)) / 0.0022778);
 	
 	return retVal;
 }
 double resistanceRange5k(uint32_t ADCValue) {
+	double voltPerBit = 3.312f / 4096.0f;
+	double bitsIn3V = 3.0f / voltPerBit;
+	
+	//double retVal = ((((double)ADCValue * voltPerBit) - (-0.029286)) / 0.0021069);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) - (-0.0020519)) / 0.000552);
+	
+	return retVal;
 
 }
 double resistanceRange10k(uint32_t ADCValue) {
@@ -148,23 +155,31 @@ double resistanceRange10k(uint32_t ADCValue) {
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.08)) / 0.000264);
-	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.08)) / 0.000264);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.16333)) / 0.000244);
 	
 	return retVal;
 }
-double resistanceRange50k(uint32_t ADCValue) {
 
+
+// The following functions would be much better modelled quadratically!!
+double resistanceRange50k(uint32_t ADCValue) {
+	double voltPerBit = 3.312f / 4096.0f;
+	double bitsIn3V = 3.0f / voltPerBit;
+	
+	//double retVal = ((((double)ADCValue * voltPerBit) - (0.08)) / 0.000264);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.22566)) / 0.000035587);
+	
+	return retVal;
 }
 double resistanceRange100k(uint32_t ADCValue) {
 	double voltPerBit = 3.312f / 4096.0f;
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.165)) / 0.0000238);
-	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.165)) / 0.0000238);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.49533)) / 0.00000976);
 	
 	return retVal;
 }
-// CAN BE FITTED TO LINEAR BUT IS NOT ACCURATE
 double resistanceRange500k(uint32_t ADCValue) {
 	double voltPerBit = 3.312f / 4096.0f;
 	double bitsIn3V = 3.0f / voltPerBit;
