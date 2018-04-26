@@ -35,6 +35,8 @@ typedef struct UIVals {
 
 UIVals *interfaceVals;
 const int MAXINDEX[5] = {9, 3, 6, 0, 2};
+uint32_t ADCValues[100] = {0.0};
+uint32_t ADCAverage = 0;
 
 
 void initUI(void) {
@@ -67,22 +69,21 @@ void initUI(void) {
 	interfaceVals->readType[3] = "Hz ";
 	interfaceVals->readType[4] = "C  ";
 	
-	interfaceVals->voltageRange[0] =  "0.001";
-	interfaceVals->voltageRange[1] =  "0.01";
-	interfaceVals->voltageRange[2] =  "0.1";
-	interfaceVals->voltageRange[3] =  "1.0";
-	interfaceVals->voltageRange[4] = "10.0";
-	interfaceVals->voltageRange[5] =  "0.001 AC";
-	interfaceVals->voltageRange[6] =  "0.01 AC";
-	interfaceVals->voltageRange[7] =  "0.1 AC";
-	interfaceVals->voltageRange[8] =  "1.0 AC";
-	interfaceVals->voltageRange[9] = "10.0 AC";
+	interfaceVals->voltageRange[0] =  "10.0";
+	interfaceVals->voltageRange[1] =   "1.0";
+	interfaceVals->voltageRange[2] =   "0.1";
+	interfaceVals->voltageRange[3] =   "0.01";
+	interfaceVals->voltageRange[4] =   "0.001";
+	interfaceVals->voltageRange[5] =  "10.0 AC";
+	interfaceVals->voltageRange[6] =   "1.0 AC";
+	interfaceVals->voltageRange[7] =   "0.1 AC";
+	interfaceVals->voltageRange[8] =   "0.01 AC";
+	interfaceVals->voltageRange[9] =   "0.001 AC";
 	
-	
-	interfaceVals->currentRange[0] = "0.001";
-	interfaceVals->currentRange[1] = "0.01";
-	interfaceVals->currentRange[2] = "0.1";
-	interfaceVals->currentRange[3] = "1.0";
+	interfaceVals->currentRange[0] = "1.0";
+	interfaceVals->currentRange[1] = "0.1";
+	interfaceVals->currentRange[2] = "0.01";
+	interfaceVals->currentRange[3] = "0.001";
 	
 	interfaceVals->capacitanceRange[0] = "1.0";
 	interfaceVals->capacitanceRange[1] = "2.0";
@@ -108,6 +109,8 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 			} else {
 				++*typeIndex;
 			}
+			
+			*rangeIndex = 0;
 		break;				
 		case 2:
 			//this button decrements read type
@@ -116,6 +119,8 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 			} else {
 				--*typeIndex;
 			}
+			
+			*rangeIndex = 0;
 		break;				
 		case 3:
 			if(*autoRangeState == 0){
@@ -188,7 +193,7 @@ void display(char *readType[],
 
 			switch(rangeIndex){
 				case 0:
-					displayVal = range1m();			
+					displayVal = range10(ADCAverage);			
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -198,7 +203,7 @@ void display(char *readType[],
 				break;					
 				case 1:
 
-					displayVal = range10m();
+					displayVal = range1(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
 				
@@ -208,7 +213,7 @@ void display(char *readType[],
 					
 				break;									
 				case 2:
-					displayVal = range100m();				
+					displayVal = range100m(ADCAverage);				
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -217,7 +222,7 @@ void display(char *readType[],
 					
 				break;
 				case 3:
-					displayVal = range1();
+					displayVal = range10m(ADCAverage);
 					displayReading(displayVal);
 					
 					// Attempt to send via uart
@@ -225,8 +230,8 @@ void display(char *readType[],
 					WriteToOutputString(displayVal);
 				break;
 				case 4:
-					displayVal = range10();
-					displayReading(range10());
+					displayVal = range1m(ADCAverage);
+					displayReading(displayVal);
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -234,7 +239,7 @@ void display(char *readType[],
 					
 				break;
 				case 5:
-					displayVal = range1m();
+					displayVal = range10(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -243,7 +248,7 @@ void display(char *readType[],
 					
 				break;
 				case 6:
-					displayVal = range10m();
+					displayVal = range1(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -252,7 +257,7 @@ void display(char *readType[],
 					
 				break;
 				case 7:
-					displayVal = range100m();
+					displayVal = range100m(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -261,7 +266,7 @@ void display(char *readType[],
 					
 				break;
 				case 8:
-					displayVal = range1();
+					displayVal = range10m(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -270,7 +275,7 @@ void display(char *readType[],
 					
 				break;
 				case 9:
-					displayVal = range10();
+					displayVal = range1m(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -287,7 +292,7 @@ void display(char *readType[],
 			//---- Code for displaying Current reading ----//
 			switch(rangeIndex){
 				case 0:
-					displayVal = range1m();
+					displayVal = currentRange1(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
 				
@@ -297,7 +302,7 @@ void display(char *readType[],
 					
 				break;					
 				case 1:
-					displayVal = range10m();
+					displayVal = currentRange100m(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
 				
@@ -307,7 +312,7 @@ void display(char *readType[],
 					
 				break;					
 				case 2:
-					displayVal = range10m();
+					displayVal = currentRange10m(ADCAverage);
 					displayReading(displayVal);
 				
 					// Attempt to send via uart
@@ -316,7 +321,7 @@ void display(char *readType[],
 					
 				break;
 				case 3:
-					displayVal = range1();
+					displayVal = currentRange1m(ADCAverage);
 					displayReading(displayVal);
 					
 					// Attempt to send via uart
@@ -334,52 +339,72 @@ void display(char *readType[],
 			switch(interfaceVals->rangeIndex) {
 				case 0:
 					{
-						double val = readADC1();
-						double grad = ((1000.0 - 100.0) / (2.1 - 0.19));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((1000.0 - 100.0) / (2.1 - 0.19));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange1k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 1:
 
 					{
-						double val = readADC1();
-						double grad = ((5000.0 - 1000.0) / (2.8 - 0.55));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((5000.0 - 1000.0) / (2.8 - 0.55));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange5k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 2:
 					{
-						double val = readADC1();
-						double grad = ((10000.0 - 5000.0) / (2.72 - 1.4));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((10000.0 - 5000.0) / (2.72 - 1.4));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange10k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 3:
 					{
-						double val = readADC1();
-						double grad = ((50000.0 - 10000.0) / (2.77 - 0.56));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((50000.0 - 10000.0) / (2.77 - 0.56));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange50k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 4:
 					{
-						double val = readADC1();
-						double grad = ((100000.0 - 50000.0) / (2.55 - 1.36));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((100000.0 - 50000.0) / (2.55 - 1.36));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange100k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 5:
 					{
-						double val = readADC1();
-						double grad = ((500000.0 - 100000.0) / (1.91- 0.49));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((500000.0 - 100000.0) / (1.91- 0.49));
+//						displayReading(val * grad);
+						displayVal = resistanceRange500k(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 				case 6:
 					{
-						double val = readADC1();
-						double grad = ((1000000.0 - 500000.0) / (1.39 - 0.94));
-						displayReading(val * grad);
+//						double val = readADC1();
+//						double grad = ((1000000.0 - 500000.0) / (1.39 - 0.94));
+//						displayReading(val * grad);
+						
+						displayVal = resistanceRange1M(ADCAverage);
+						displayReading(displayVal);
 					}
 				break;
 			}
@@ -421,6 +446,23 @@ void display(char *readType[],
 void TIM5_IRQHandler(void) {
  	// clear IRQ flag in TIM5
  	TIM5->SR &= ~0x00000001;      
+	
+	ADCAverage = 0.0;
+	
+	// Poll the ADC
+	uint32_t ADCValue = ADC1value();
+	// Add the value to the averages
+	for(int i = 0; i < 100; i++) {
+		if(i != 99) {
+			ADCValues[i] = ADCValues[i + 1]; 
+		} else {			
+			ADCValues[i] = ADCValue;
+		}
+		
+		ADCAverage += ADCValues[i];
+	}
+	
+	ADCAverage /= 100.0;
 	
 	setModule(interfaceVals->typeIndex);
 

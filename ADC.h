@@ -7,7 +7,7 @@
 	unsigned int ADC1value (void);
 	
 	//Voltage value at ADC1
-	double readADC1(void);
+	//double readADC1(void);
 	
 	void ADC2Init(void);
 	
@@ -15,6 +15,6 @@
 	unsigned int ADC2value (void);
 	
 	//voltage value at ADC2
-	double readADC2(void) ;
+	//double readADC2(void) ;
 	
 #endif

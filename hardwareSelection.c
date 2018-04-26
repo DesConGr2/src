@@ -35,15 +35,15 @@ void setRange(int module, int range) {
 		case 0:
 			switch(range) {
 				case 0:
-					// 1m
+					// 10
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 0);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 1);
 				break;
 				case 1:
-					// 10m
+					// 1
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
+					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				break;
 				case 2:
@@ -53,27 +53,27 @@ void setRange(int module, int range) {
 					setPin("J7", 5, 1);
 				break;
 				case 3:
-					// 1
+					// 10m
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
+					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
 				case 4:
-					// 10
+					// 1m
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
-				break;
-				case 5:
-					// 1m AC
-					setPin("J7", 3, 1);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
-				case 6:
-					// 10m AC
+				case 5:
+					// 10 AC
 					setPin("J7", 3, 1);
-					setPin("J7", 4, 0);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 1);
+				break;
+				case 6:
+					// 1 AC
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				break;
 				case 7:
@@ -83,72 +83,95 @@ void setRange(int module, int range) {
 					setPin("J7", 5, 1);
 				break;
 				case 8:
-					// 1 AC
+					// 10m AC
 					setPin("J7", 3, 1);
-					setPin("J7", 4, 1);
+					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
 				case 9:
-					// 10 AC
+					// 1m AC
 					setPin("J7", 3, 1);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
 				break;
 			}			
 		break;
 		// Current
 		case 1:
-		break;
-		// Resistance
-		case 2:
 			switch(range) {
-				// 1k
+				// 1
 				case 0:
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 0);
-					setDAC(2.2);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 1);
 				break;
-				// 5k
+				// 100m
 				case 1:
 					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
-					setPin("J7", 5, 1);
-					setDAC(1.9);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 0);
 				break;
-				// 10k
+				// 10m
 				case 2:
 					setPin("J7", 3, 0);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
+				break;
+				// 1m
+				case 3:
+					setPin("J7", 3, 0);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;			
+			}
+		break;
+		// Resistance
+		case 2:
+			// Set the required voltage range
+			setPin("J7", 3, 0);
+			setPin("J7", 4, 1);
+			setPin("J7", 5, 1);
+			switch(range) {
+				// 1k
+				case 0:
+					setPin("J7", 6, 0);
+					setPin("J7", 7, 0);
+					setDAC(2.2);
+				break;
+				// 5k
+				case 1:
+					setPin("J7", 6, 0);
+					setPin("J7", 7, 1);
+					setDAC(1.9);
+				break;
+				// 10k
+				case 2:
+					setPin("J7", 6, 0);
+					setPin("J7", 7, 1);
 					setDAC(2.2);
 				break;
 				// 50k
 				case 3:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 0);
+					setPin("J7", 6, 1);
+					setPin("J7", 7, 0);
 					setDAC(1.9);
 				break;
 				// 100k
 				case 4:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 0);
+					setPin("J7", 6, 1);
+					setPin("J7", 7, 0);
 					setDAC(2.2);
 				break;
 				// 500k
 				case 5:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
+					setPin("J7", 6, 1);
+					setPin("J7", 7, 1);
 					setDAC(1.9);
 				break;
 				// 1M
 				case 6:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 1);
+					setPin("J7", 6, 1);
+					setPin("J7", 7, 1);
 					setDAC(2.2);
 				break;
 			}

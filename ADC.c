@@ -43,11 +43,11 @@ uint32_t ADC1value (void) {
 	return (ADC1->DR);
 }
 
- double readADC1(void) {
-	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (3.3f / 4096.0f); 
-	return returnVal;
-}
+// double readADC1(void) {
+//	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+//	double returnVal = (double)value * (3.3f / 4096.0f); 
+//	return returnVal;
+//}
 	
 
 /* Function to intiialise ADC2    */
@@ -91,9 +91,9 @@ uint32_t ADC2value (void) {
 	return (ADC2->DR);
 }
 
- double readADC2(void) {
-	uint32_t value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (3.3f / 4096.0f); 
-	return returnVal;
-}
+// double readADC2(void) {
+//	uint32_t value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+//	double returnVal = (double)value * (3.3f / 4096.0f); 
+//	return returnVal;
+//}
 
