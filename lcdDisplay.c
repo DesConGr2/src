@@ -84,3 +84,44 @@ void displayComms(int toggle) {
 		}
 }
 
+void displaymV(void) {
+	lcd_write_string("mV  ", 1, 12);
+}
+
+void displaymA(void) {
+	lcd_write_string("mA  ", 1, 12);
+}
+
+void displaykOhm(void) {
+	lcd_write_string("kOhm", 1, 12);
+}
+
+void displayMOhm(void) {
+	lcd_write_string("MOhm", 1, 12);
+}
+
+void displayHz(void) {
+	lcd_write_string("Hz  ", 1, 12);
+}
+
+void displaykHz(void) {
+	lcd_write_string("kHz ", 1, 12);
+}
+
+void displayMHz(void) {
+	lcd_write_string("MHz ", 1, 12);
+}
+
+void displaypF(void) {
+	lcd_write_string("pF  ", 1, 12);
+}
+
+void displaynF(void) {
+	lcd_write_string("nF  ", 1, 12);
+}
+
+void displayuF(void) {
+	lcd_write_string("uF  ", 1, 12);
+}
+
+

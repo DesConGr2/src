@@ -433,8 +433,9 @@ void TIM5_IRQHandler(void) {
 	// Display settings
 	interfaceVals->dispcount++;
 	
-	if (interfaceVals->dispcount ==  20) {
+	if (interfaceVals->dispcount ==  40) {
 	//display
+	displayClear();
 	display(interfaceVals->readType, 
 					interfaceVals->voltageRange, 
 					interfaceVals->currentRange, 
