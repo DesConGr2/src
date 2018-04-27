@@ -1,13 +1,9 @@
 #ifndef DataLog_H
 #define DataLog_H
 
-void datalog(void);
-
-void displayDatalog(void);
-	
 void clearDatalog(void);
 
-void datalogButton(double value, double range, char *type);
+void datalogButton(double value, int range, char *type);
 
 void cycleDatalogDown(void);
 

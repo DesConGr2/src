@@ -9,6 +9,9 @@
 #include "ranging.h"
 #include "sound_response.h"
 #include "DataLog.h"
+#include "Diode.h"
+#include "TransistorFunction.h"
+
 
 void SysTick_Handler(void);
 // Delays number of tick Syst icks (happens every 1 ms)
@@ -24,7 +27,7 @@ int main (void) {
     while (1);                                  /* Capture error              */
   }
 	//Define the arrays for the user options
-	char *readType[6] = {"V         ", "A         ", "Ohm       ", "transistor", "Diode     ", "display   "};
+	char *readType[7] = {"V         ", "A         ", "Ohm       ", "transistor     ", "Diode          ", "display        ","claer          "};
 	double voltageRange[5] = {0.001, 0.01, 0.1, 1, 10};
 	double currentRange[4] = {0.001, 0.01, 0.1, 1};
 	// Unsure about what ranges we have for the resistance
@@ -111,8 +114,11 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
-			if(*typeIndex == 5) {
+			if(*typeIndex == 6) {
+				displayDatalogValueClear();
 				*typeIndex = 0;
+			} else if(*typeIndex == 5){
+				displayDatalogValueClear();
 			} else {
 				++*typeIndex;
 			}
@@ -120,7 +126,10 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		case 2:
 			//this button decrements read type
 			if(*typeIndex == 0) {
-				*typeIndex = 5;
+				displayDatalogValueClear();
+				*typeIndex = 6;
+			} else if(*typeIndex == 5)  {
+				displayDatalogValueClear();
 			} else {
 				--*typeIndex;
 			}
@@ -172,7 +181,11 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 	} 
 	break;
 	case 8:
+		if(*typeIndex == 6) {
+			clearDatalog();
+		}else {
 		sendDatalog();
+		}
 	break;
 	}
 }
@@ -193,35 +206,35 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 				case 0:
 						displayReading(range1m());
 						if(*log == 1){
-							datalogButton(range1m());
+							datalogButton(range1m(), 1 ,readType[*typeIndex] );
 							*log = 0;
 						}
 				break;					
 				case 1:
 					displayReading(range10m());
 					if(*log == 1){
-								datalogButton(range10m());
+								datalogButton(range10m(), 1, readType[*typeIndex]);
 								*log = 0;
 							}
 				break;					
 				case 2:
 					displayReading(range100m());
 					if(*log == 1){
-							datalogButton(range100m());
+							datalogButton(range100m(),1, readType[*typeIndex]);
 							*log = 0;
 						}
 				break;
 				case 3:
 					displayReading(range1());
 					if(*log == 1){
-							datalogButton(range1());
+							datalogButton(range1(), 0, readType[*typeIndex]);
 							*log = 0;
 						}
 				break;
 				case 4:
 					displayReading(range10());
 					if(*log == 1){
-							datalogButton(range10());
+							datalogButton(range10(), 0, readType[*typeIndex]);
 							*log = 0;
 						}
 				break;

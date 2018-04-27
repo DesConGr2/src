@@ -13,31 +13,31 @@ int check;
 int x;
 double *DatalogValue;
 char *DatalogType;
-double *DatalogRange;
+int *DatalogRange;
 
-void addToDatalog(double value, double range, char *type){
+void addToDatalog(double value, int range, char *type){
 	 if(posistion >= sizeOfDatalog-1){
-		posistion = 0;
+		posistion = 1;
 		DatalogValue[posistion] = value;
-		DatalogRange[posistion] = range;
  		DatalogType[posistion] = *type;
-		 posistion++;
+		DatalogRange[posistion] = range;
+		posistion++;
 	 } else {
 		 DatalogValue[posistion] = value;
-		 DatalogRange[posistion] = range;
+		DatalogRange[posistion] = range;
 		 DatalogType[posistion] = *type;
 		 posistion++;
 	 }
 }
 
-void datalogButton(double value, double range, char *type){
+void datalogButton(double value, int range, char *type){
 	if(check == 0){
 		sizeOfDatalog = 20;
 		posistion = 1;
 		check = 1;
 		x = 0;
 		DatalogValue = (double *)malloc(sizeof(double)*sizeOfDatalog); 
-		//DatalogRange = (double *)malloc(sizeof(double)*sizeOfDatalog);
+		DatalogRange = (int *)malloc(sizeof(int)*sizeOfDatalog);
 		DatalogType = (char *)malloc(sizeof(char)*sizeOfDatalog);
 		addToDatalog(value, range, type);
 	} else {
@@ -45,8 +45,8 @@ void datalogButton(double value, double range, char *type){
 	}
 }
 
-void displayDatalogType(char *string, double range) {
-	if(1 >= range){
+void displayDatalogType(char *string, int range) {
+	if(1 == range){
 		lcd_write_string("m", 1, 8);
 	} else {
 		lcd_write_string(" ", 1, 8);
@@ -56,13 +56,14 @@ void displayDatalogType(char *string, double range) {
 
 
 void cycleDatalogUp(void){
+	
 	if(x >= posistion-1) {
 		displayDatalogValueClear();
 		x = 0;
 	} else{
+		char *type = (char *)malloc(sizeof(char));
 		x++;
 		displayReading(DatalogValue[x]);  
-		char *type = (char *)malloc(sizeof(char));
 		*type = DatalogType[x];
 		displayDatalogType(type, DatalogRange[x]);
 		free(type);
@@ -71,7 +72,7 @@ void cycleDatalogUp(void){
 }
 
 void cycleDatalogDown(void){
-	if(2 > x) {
+		if(1 >= x) {
 		displayDatalogValueClear();
 		x = posistion; 
 	} else {
@@ -85,24 +86,10 @@ void cycleDatalogDown(void){
 	}
 }
 
-
-//dislays each value from the datalog for a period of time
-//void displayDatalog(void){
-//	for(int i = 0; i >= sizeOfDatalog-1; i++){
-//		if(DatalogValue[i] == NULL)
-//		{
-//			i = sizeOfDatalog-1;
-//		}else{
-//			//set datalog title to dislpay
-//			displayReading(DatalogValue[i]);
-//			//add delay
-//		}
-//	}
-//}
-
 void clearDatalog(void){
 	free(DatalogValue);
 	free(DatalogType);
+	free(DatalogRange);
 	check = 0;
 	x = 0;
 	posistion = 0; 
@@ -118,5 +105,4 @@ void sendDatalog(void){
 void displayDatalogValueClear(void) {
 	lcd_write_string("               ", 1, 0);
 }
-
 
