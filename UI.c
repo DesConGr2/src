@@ -36,7 +36,7 @@ typedef struct UIVals {
 
 UIVals *interfaceVals;
 const int MAXINDEX[5] = {7, 3, 6, 0, 2};
-uint32_t ADCValues[100] = {0.0};
+uint32_t ADCValues[50] = {0.0};
 uint32_t ADCAverage = 0;
 
 
@@ -105,7 +105,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
-			if(*typeIndex == 5) {
+			if(*typeIndex == 6) {
 				*typeIndex = 0;
 			} else {
 				++*typeIndex;
@@ -116,7 +116,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		case 2:
 			//this button decrements read type
 			if(*typeIndex == 0) {
-				*typeIndex = 5;
+				*typeIndex = 6;
 			} else {
 				--*typeIndex;
 			}
@@ -446,6 +446,10 @@ void display(char *readType[],
 		case 5:
 			displayType("Continuity");
 		break;
+		// Diode
+		case 6:
+			displayType("Diode");
+		break;
 	}
 	
 }
@@ -459,8 +463,8 @@ void TIM5_IRQHandler(void) {
 	// Poll the ADC
 	uint32_t ADCValue = ADC1value();
 	// Add the value to the averages
-	for(int i = 0; i < 100; i++) {
-		if(i != 99) {
+	for(int i = 0; i < 50; i++) {
+		if(i != 49) {
 			ADCValues[i] = ADCValues[i + 1]; 
 		} else {			
 			ADCValues[i] = ADCValue;
@@ -469,7 +473,7 @@ void TIM5_IRQHandler(void) {
 		ADCAverage += ADCValues[i];
 	}
 	
-	ADCAverage /= 100.0;
+	ADCAverage /= 50.0;
 	
 	setModule(interfaceVals->typeIndex);
 
@@ -481,8 +485,12 @@ void TIM5_IRQHandler(void) {
 		interfaceVals->autoRangeCount++;	
 		
 		if(interfaceVals->autoRangeCount == 200) {
-			interfaceVals->rangeIndex =  autoRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
+			int newRange =  autoRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
 			interfaceVals->autoRangeCount = 0;
+			if(newRange != interfaceVals->rangeIndex) {
+				displayClear();
+				interfaceVals->rangeIndex = newRange;
+			}
 		}
 	} 
 	

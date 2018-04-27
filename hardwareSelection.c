@@ -25,6 +25,12 @@ void setModule(int module) {
 			setPin("J5", 5, 1);
 			setPin("J5", 7, 0);
 		break;
+		// Diode
+		case 6:
+		setPin("J5", 4, 0);
+		setPin("J5", 5, 1);
+		setPin("J5", 7, 1);
+		break;
 	}
 }
 
