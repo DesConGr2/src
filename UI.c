@@ -14,7 +14,7 @@
 
 typedef struct UIVals {
 	char *readType[5];
-	char *voltageRange[10];
+	char *voltageRange[8];
 	char *currentRange[4];
 	char *resistanceRange[7];
 	char *capacitanceRange[3];
@@ -34,7 +34,7 @@ typedef struct UIVals {
 
 
 UIVals *interfaceVals;
-const int MAXINDEX[5] = {9, 3, 6, 0, 2};
+const int MAXINDEX[5] = {7, 3, 6, 0, 2};
 uint32_t ADCValues[100] = {0.0};
 uint32_t ADCAverage = 0;
 
@@ -73,12 +73,10 @@ void initUI(void) {
 	interfaceVals->voltageRange[1] =   "1.0";
 	interfaceVals->voltageRange[2] =   "0.1";
 	interfaceVals->voltageRange[3] =   "0.01";
-	interfaceVals->voltageRange[4] =   "0.001";
-	interfaceVals->voltageRange[5] =  "10.0 AC";
-	interfaceVals->voltageRange[6] =   "1.0 AC";
-	interfaceVals->voltageRange[7] =   "0.1 AC";
-	interfaceVals->voltageRange[8] =   "0.01 AC";
-	interfaceVals->voltageRange[9] =   "0.001 AC";
+	interfaceVals->voltageRange[4] =  "10.0 AC";
+	interfaceVals->voltageRange[5] =   "1.0 AC";
+	interfaceVals->voltageRange[6] =   "0.1 AC";
+	interfaceVals->voltageRange[7] =   "0.01 AC";
 	
 	interfaceVals->currentRange[0] = "1.0";
 	interfaceVals->currentRange[1] = "0.1";
@@ -420,24 +418,28 @@ void display(char *readType[],
 			displayStringRange(capacitanceRange[rangeIndex]);
 			if(rangeIndex == 0) {
 				// Hacky way of addressing things for harry 
-				setRange(4,0);
+				setRange(4, 0, ADCAverage);
 				//double cap = (getPeriod() / (0.693 * 60000000));
 				//displayReading(cap);
 				
 			} else if(rangeIndex == 1) {
 				// Hacky way of addressing things for harry 
-				setRange(4,1);
+				setRange(4, 1, ADCAverage);
 				//double cap = (getPeriod() / (0.693 * 60000));
 				//displayReading(cap);
 				
 			} else if (rangeIndex == 2) {
 				// Hacky way of addressing things for harry 
-				setRange(4,2);
+				setRange(4, 2, ADCAverage);
 				//double cap = (getPeriod() / (0.693 * 6000));
 				//displayReading(cap);
 			}
 			
 			//displayReading(getPeriod());
+		break;
+		// Continuity
+		case 5:
+			displayStringRange("Continuity");
 		break;
 	}
 	
@@ -467,9 +469,10 @@ void TIM5_IRQHandler(void) {
 	setModule(interfaceVals->typeIndex);
 
 	if(interfaceVals->autoRangeState == 1) {
-		autoRange(interfaceVals->rangeIndex);
+		// Is a delay needed?
+		autoRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
 	} else {	
-		setRange(interfaceVals->typeIndex, interfaceVals->rangeIndex);
+		setRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
 	}
 	
 	// Display settings

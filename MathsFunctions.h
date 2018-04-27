@@ -1,5 +1,7 @@
 #ifndef MATHSFUNCTIONS_H
 #define MATHSFUNCTIONS_H
+#include <stdint.h>
+
 // Perform calculations to convert
 double range1m(uint32_t ADCValue);
 double range10m(uint32_t ADCValue);

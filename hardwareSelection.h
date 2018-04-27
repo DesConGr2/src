@@ -14,12 +14,10 @@
 // 1 - 1       - 010
 // 2 - 100m    - 001 
 // 3 - 10m     - 000
-// 4 - 1m      - 000
-// 5 - 10 AC   - 111
-// 6 - 1 AC    - 110
-// 7 - 100m AC - 101
-// 8 - 10m AC  - 100
-// 9 - 1m AC   - 100
+// 4 - 10 AC   - 111
+// 5 - 1 AC    - 110
+// 6 - 100m AC - 101
+// 7 - 10m AC  - 100
 // Current:
 // 0 - 1    - 011
 // 1 - 100m - 010
@@ -44,12 +42,16 @@
 // Set a range manually
 // Sets digital pins 2, 3 and 4 on J7 to output the desired range, in 3 bit encoding.
 // Pin 2 is the MSB and pin 4 is the LSB
-void setRange(int module, int range);
+// J7 5+6 for OhmMeter
+void setRange(int module, int range, double ADCValue);
 // Set the hardware module you wnat to select.
 // Using J5 pins 3-5, 3 MSB 5 LSB
 void setModule(int module);
 
+// Use J5 pin 7 for freq/Cap
+// Use J5 pin 6 for audio resopnse
+
 // Automatically chose a suitable range for the user
-int autoRange(int range);
+int autoRange(int module, int range, double ADCValue);
 
 #endif

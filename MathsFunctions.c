@@ -185,7 +185,7 @@ double resistanceRange500k(uint32_t ADCValue) {
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.19272)) / 0.0000034903);
-	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.19272)) / 0.0000034903);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.27579)) / 0.00000045463);
 	
 	return retVal;
 }
@@ -194,7 +194,7 @@ double resistanceRange1M(uint32_t ADCValue) {
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.49)) / 0.0000009);
-	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.49)) / 0.0000009);
+	double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.000000042)) / 0.22183);
 	
 	
 	return retVal;
