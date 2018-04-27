@@ -102,7 +102,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 	switch(buttonPressed){
 		case 1:
 			//this button increments read type
-			if(*typeIndex == 4) {
+			if(*typeIndex == 5) {
 				*typeIndex = 0;
 			} else {
 				++*typeIndex;
@@ -113,7 +113,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		case 2:
 			//this button decrements read type
 			if(*typeIndex == 0) {
-				*typeIndex = 4;
+				*typeIndex = 5;
 			} else {
 				--*typeIndex;
 			}
@@ -470,7 +470,7 @@ void TIM5_IRQHandler(void) {
 
 	if(interfaceVals->autoRangeState == 1) {
 		// Is a delay needed?
-		autoRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
+		interfaceVals->rangeIndex =  autoRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
 	} else {	
 		setRange(interfaceVals->typeIndex, interfaceVals->rangeIndex, ADCAverage);
 	}
