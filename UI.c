@@ -14,7 +14,7 @@
 
 typedef struct UIVals {
 	char *readType[5];
-	char *voltageRange[8];
+	char *voltageRange[10];
 	char *currentRange[4];
 	char *resistanceRange[7];
 	char *capacitanceRange[3];
@@ -73,10 +73,12 @@ void initUI(void) {
 	interfaceVals->voltageRange[1] =   "1.0";
 	interfaceVals->voltageRange[2] =   "0.1";
 	interfaceVals->voltageRange[3] =   "0.01";
-	interfaceVals->voltageRange[4] =  "10.0 AC";
-	interfaceVals->voltageRange[5] =   "1.0 AC";
-	interfaceVals->voltageRange[6] =   "0.1 AC";
-	interfaceVals->voltageRange[7] =   "0.01 AC";
+	interfaceVals->voltageRange[4] =   "0.001";
+	interfaceVals->voltageRange[5] =  "10.0 AC";
+	interfaceVals->voltageRange[6] =   "1.0 AC";
+	interfaceVals->voltageRange[7] =   "0.1 AC";
+	interfaceVals->voltageRange[8] =   "0.01 AC";
+	interfaceVals->voltageRange[9] =   "0.001 AC";
 	
 	interfaceVals->currentRange[0] = "1.0";
 	interfaceVals->currentRange[1] = "0.1";
