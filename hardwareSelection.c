@@ -25,6 +25,15 @@ void setModule(int module) {
 			setPin("J5", 5, 1);
 			setPin("J5", 7, 0);
 		break;
+		// Frequency
+		case 3:
+			setPin("J5", 15, 0);
+		break;
+		// Capacitance
+		case 4:
+			setPin("J5", 15, 1);
+		//add more code here please
+		break;
 		// Diode
 		case 6:
 		setPin("J5", 4, 0);
