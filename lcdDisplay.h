@@ -15,8 +15,11 @@ void displayRange(double value);
 void displayAuto(int toggle);
 void displayComms(int toggle);
 
+void displayV(void);
 void displaymV(void);
+void displayA(void);
 void displaymA(void);
+void displayOhm(void);
 void displaykOhm(void);
 void displayMOhm(void);
 void displayHz(void);

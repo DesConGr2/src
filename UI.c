@@ -193,6 +193,7 @@ void display(char *readType[],
 				case 0:
 					displayVal = range10(ADCAverage);			
 					displayReading(displayVal);
+					displayV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -204,6 +205,7 @@ void display(char *readType[],
 					displayVal = range1(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
+					displayV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -213,6 +215,7 @@ void display(char *readType[],
 				case 2:
 					displayVal = range100m(ADCAverage);				
 					displayReading(displayVal);
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -222,6 +225,7 @@ void display(char *readType[],
 				case 3:
 					displayVal = range10m(ADCAverage);
 					displayReading(displayVal);
+					displaymV();
 					
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -230,6 +234,7 @@ void display(char *readType[],
 				case 4:
 					displayVal = range1m(ADCAverage);
 					displayReading(displayVal);
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -239,6 +244,7 @@ void display(char *readType[],
 				case 5:
 					displayVal = range10(ADCAverage);
 					displayReading(displayVal);
+					displayV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -248,6 +254,7 @@ void display(char *readType[],
 				case 6:
 					displayVal = range1(ADCAverage);
 					displayReading(displayVal);
+					displayV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -257,6 +264,7 @@ void display(char *readType[],
 				case 7:
 					displayVal = range100m(ADCAverage);
 					displayReading(displayVal);
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -266,6 +274,7 @@ void display(char *readType[],
 				case 8:
 					displayVal = range10m(ADCAverage);
 					displayReading(displayVal);
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -275,6 +284,7 @@ void display(char *readType[],
 				case 9:
 					displayVal = range1m(ADCAverage);
 					displayReading(displayVal);
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -293,6 +303,7 @@ void display(char *readType[],
 					displayVal = currentRange1(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
+					displayA();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -303,6 +314,7 @@ void display(char *readType[],
 					displayVal = currentRange100m(ADCAverage);
 					// Display to LCD
 					displayReading(displayVal);
+					displaymA();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -312,6 +324,7 @@ void display(char *readType[],
 				case 2:
 					displayVal = currentRange10m(ADCAverage);
 					displayReading(displayVal);
+					displaymA();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -321,7 +334,8 @@ void display(char *readType[],
 				case 3:
 					displayVal = currentRange1m(ADCAverage);
 					displayReading(displayVal);
-					
+					displaymA();
+				
 					// Attempt to send via uart
 					if(commsState == 1)
 					WriteToOutputString(displayVal);
@@ -343,6 +357,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange1k(ADCAverage);
 						displayReading(displayVal);
+						displayOhm();
 					}
 				break;
 				case 1:
@@ -354,6 +369,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange5k(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 				case 2:
@@ -364,6 +380,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange10k(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 				case 3:
@@ -374,6 +391,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange50k(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 				case 4:
@@ -384,6 +402,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange100k(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 				case 5:
@@ -393,6 +412,7 @@ void display(char *readType[],
 //						displayReading(val * grad);
 						displayVal = resistanceRange500k(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 				case 6:
@@ -403,6 +423,7 @@ void display(char *readType[],
 						
 						displayVal = resistanceRange1M(ADCAverage);
 						displayReading(displayVal);
+						displaykOhm();
 					}
 				break;
 			}
