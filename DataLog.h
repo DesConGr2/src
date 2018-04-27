@@ -5,14 +5,16 @@ void datalog(void);
 
 void displayDatalog(void);
 	
-void closeDatalog(void);
+void clearDatalog(void);
 
-void datalogButton(double value);
+void datalogButton(double value, double range, char *type);
 
 void cycleDatalogDown(void);
 
 void cycleDatalogUp(void);
 
 void sendDatalog(void);
+
+void displayDatalogValueClear(void);
 	
 #endif
