@@ -460,7 +460,7 @@ void display(char *readType[],
 		break;
 		// Continuity
 		case 5:
-			displayStringRange("Continuity");
+			displayType("Continuity");
 		break;
 	}
 	
@@ -499,9 +499,9 @@ void TIM5_IRQHandler(void) {
 	// Display settings
 	interfaceVals->dispcount++;
 	
-	if (interfaceVals->dispcount ==  40) {
+	if (interfaceVals->dispcount ==  20) {
 	//display
-	displayClear();
+	//displayClear();
 	display(interfaceVals->readType, 
 					interfaceVals->voltageRange, 
 					interfaceVals->currentRange, 
