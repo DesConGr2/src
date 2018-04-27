@@ -3,11 +3,15 @@
 #include <stdint.h>
 
 // Perform calculations to convert
-double range1m(uint32_t ADCValue);
 double range10m(uint32_t ADCValue);
 double range100m(uint32_t ADCValue);
 double range1(uint32_t ADCValue);
 double range10(uint32_t ADCValue);
+
+double range10mAC(uint32_t ADCValue);
+double range100mAC(uint32_t ADCValue);
+double range1AC(uint32_t ADCValue);
+double range10AC(uint32_t ADCValue);
 
 double currentRange1m(uint32_t ADCValue);
 double currentRange10m(uint32_t ADCValue);

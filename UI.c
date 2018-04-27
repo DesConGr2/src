@@ -232,9 +232,9 @@ void display(char *readType[],
 					WriteToOutputString(displayVal);
 				break;
 				case 4:
-					displayVal = range1m(ADCAverage);
+					displayVal = range10AC(ADCAverage);
 					displayReading(displayVal);
-					displaymV();
+					displayV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -242,7 +242,7 @@ void display(char *readType[],
 					
 				break;
 				case 5:
-					displayVal = range10(ADCAverage);
+					displayVal = range1AC(ADCAverage);
 					displayReading(displayVal);
 					displayV();
 				
@@ -252,9 +252,9 @@ void display(char *readType[],
 					
 				break;
 				case 6:
-					displayVal = range1(ADCAverage);
+					displayVal = range100mAC(ADCAverage);
 					displayReading(displayVal);
-					displayV();
+					displaymV();
 				
 					// Attempt to send via uart
 					if(commsState == 1)
@@ -262,27 +262,7 @@ void display(char *readType[],
 					
 				break;
 				case 7:
-					displayVal = range100m(ADCAverage);
-					displayReading(displayVal);
-					displaymV();
-				
-					// Attempt to send via uart
-					if(commsState == 1)
-					WriteToOutputString(displayVal);
-					
-				break;
-				case 8:
-					displayVal = range10m(ADCAverage);
-					displayReading(displayVal);
-					displaymV();
-				
-					// Attempt to send via uart
-					if(commsState == 1)
-					WriteToOutputString(displayVal);
-					
-				break;
-				case 9:
-					displayVal = range1m(ADCAverage);
+					displayVal = range10mAC(ADCAverage);
 					displayReading(displayVal);
 					displaymV();
 				
