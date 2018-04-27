@@ -84,12 +84,24 @@ void displayComms(int toggle) {
 		}
 }
 
+void displayV(void){
+lcd_write_string("V   ", 1, 12);
+}
+
 void displaymV(void) {
 	lcd_write_string("mV  ", 1, 12);
 }
 
+void displayA(void) {
+	lcd_write_string("A   ", 1, 12);
+}
+
 void displaymA(void) {
 	lcd_write_string("mA  ", 1, 12);
+}
+
+void displayOhm(void) {
+	lcd_write_string("Ohm ", 1, 12);
 }
 
 void displaykOhm(void) {
