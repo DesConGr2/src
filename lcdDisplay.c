@@ -3,6 +3,8 @@
 #include "lcd_driver.h"											// Driver to control the LCD screen operation
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 
 void initDisplay(void) {
 	lcd_change_settings(LCD_POWER_OFF, LCD_CURSOR_OFF, LCD_CBLINK_OFF);
@@ -36,10 +38,16 @@ void displayClear(void) {
 void displayReading(double value) {
 	char *displayValue = (char *)malloc(sizeof(double) * 16);
 
+	//Display the reading
 	sprintf(displayValue, "%.4f", value);
-	
 	displayStringReading(displayValue);
 	
+	//fill the remaining space
+	int ExtraSpace = strlen(displayValue);
+	
+	for(int i = ExtraSpace; i < 12; i++){
+			lcd_write_string(" ", 0, i);
+	}
 	//bug fix by JJ, need to dealloc mem
 	free(displayValue);
 }
