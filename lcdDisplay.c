@@ -46,7 +46,7 @@ void displayReading(double value) {
 	int ExtraSpace = strlen(displayValue);
 	
 	for(int i = ExtraSpace; i < 12; i++){
-			lcd_write_string(" ", 0, i);
+			lcd_write_string(" ", 1, i);
 	}
 	//bug fix by JJ, need to dealloc mem
 	free(displayValue);
