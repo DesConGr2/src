@@ -3,16 +3,6 @@
 #include "digitalIO.h"
 #include <stdlib.h>
 
-// TODO: rename
-typedef struct FreqVals {
-	int lastReadVal;
-	int hasStartedTiming;
-	double timerCount;
-	double averages[10];
-} FreqVals;
-
-FreqVals *vals;
-
 void initFreqCalc(void) {
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
