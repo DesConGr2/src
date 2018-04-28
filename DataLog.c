@@ -7,7 +7,7 @@
 #include "lcd_driver.h"	
 #include "serial_comms.h"
 
-int posistion;
+int position;
 int sizeOfDatalog;
 int check;
 int x;
@@ -16,24 +16,24 @@ char *DatalogType;
 int *DatalogRange;
 
 void addToDatalog(double value, int range, char *type){
-	 if(posistion >= sizeOfDatalog-1){
-		posistion = 1;
-		DatalogValue[posistion] = value;
- 		DatalogType[posistion] = *type;
-		DatalogRange[posistion] = range;
-		posistion++;
+	 if(position >= sizeOfDatalog-1){
+		position = 1;
+		DatalogValue[position] = value;
+ 		DatalogType[position] = *type;
+		DatalogRange[position] = range;
+		position++;
 	 } else {
-		 DatalogValue[posistion] = value;
-		DatalogRange[posistion] = range;
-		 DatalogType[posistion] = *type;
-		 posistion++;
+		 DatalogValue[position] = value;
+		DatalogRange[position] = range;
+		 DatalogType[position] = *type;
+		 position++;
 	 }
 }
 
 void datalogButton(double value, int range, char *type){
 	if(check == 0){
 		sizeOfDatalog = 20;
-		posistion = 1;
+		position = 1;
 		check = 1;
 		x = 0;
 		DatalogValue = (double *)malloc(sizeof(double)*sizeOfDatalog); 
@@ -57,15 +57,15 @@ void displayDatalogType(char *string, int range) {
 
 void cycleDatalogUp(void){
 	
-	if(x >= posistion-1) {
-		displayDatalogValueClear();
+	if(x >= position-1) {
+		//displayDatalogValueClear();
 		x = 0;
 	} else{
 		char *type = (char *)malloc(sizeof(char));
 		x++;
-		displayReading(DatalogValue[x]);  
+		//displayReading(DatalogValue[x]);  
 		*type = DatalogType[x];
-		displayDatalogType(type, DatalogRange[x]);
+		//displayDatalogType(type, DatalogRange[x]);
 		free(type);
 		
 	}
@@ -73,14 +73,14 @@ void cycleDatalogUp(void){
 
 void cycleDatalogDown(void){
 		if(1 >= x) {
-		displayDatalogValueClear();
-		x = posistion; 
+		//displayDatalogValueClear();
+		x = position; 
 	} else {
 		x--;
-		displayReading(DatalogValue[x]);
+		//displayReading(DatalogValue[x]);
 		char *type = (char *)malloc(sizeof(char));
 		*type = DatalogType[x];
-		displayDatalogType(type, DatalogRange[x]);
+		//displayDatalogType(type, DatalogRange[x]);
 		free(type);
 		
 	}
@@ -92,17 +92,17 @@ void clearDatalog(void){
 	free(DatalogRange);
 	check = 0;
 	x = 0;
-	posistion = 0; 
-	lcd_write_string("claer", 1, 7);
+	position = 0; 
+	//lcd_write_string("claer", 1, 7);
 }
 
 void sendDatalog(void){
-	for(int i = 0; i >= posistion; i++){
+	for(int i = 0; i >= position; i++){
 		 WriteToOutputString(DatalogValue[i]);
 	}
 }
 
 void displayDatalogValueClear(void) {
-	lcd_write_string("               ", 1, 0);
+	//lcd_write_string("               ", 1, 0);
 }
 

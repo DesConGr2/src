@@ -13,8 +13,6 @@ void displayClear(void);
 //void displayInt(int value);
 void displayRange(double value);
 void displayAuto(int toggle);
-<<<<<<< HEAD
-=======
 void displayComms(int toggle);
 
 void displayV(void);
@@ -31,5 +29,4 @@ void displaypF(void);
 void displaynF(void);
 void displayuF(void);
 
->>>>>>> master
 #endif

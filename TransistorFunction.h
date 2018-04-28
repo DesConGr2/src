@@ -1,6 +1,6 @@
 #ifndef TRANSISTORFUNCTION_H
 #define TRANSISTORFUNCTION_H
 
-void displayTransistor(double value);
+int displayTransistor(double value);
 
 #endif

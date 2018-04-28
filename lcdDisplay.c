@@ -84,8 +84,6 @@ void displayAuto(int toggle) {
 		}
 }
 
-<<<<<<< HEAD
-=======
 void displayComms(int toggle) {
 		//simply display an A if auto ranging is on
 		if(toggle == 1){
@@ -146,6 +144,4 @@ void displaynF(void) {
 void displayuF(void) {
 	lcd_write_string("uF  ", 1, 12);
 }
->>>>>>> master
-
 

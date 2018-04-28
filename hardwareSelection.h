@@ -31,13 +31,18 @@
 // 4 - 100k - 10
 // 5 - 500k - 11
 // 6 - 1M   - 11
-// Frequency:
-// idk if this even needs to be here
 // Capacitace:
-// idk yet
-// ADD A RANGE WHICH Is JUST RESISTANCE BUT BUZZES OUT OF RANGE
+// 0 - ? - 000
+// 1 - ? - 001
+// 2 - ? - 010 
 
-
+// J7: 
+// Pin 2,3,4 - Range addresses
+// Pin 5,6 - OhmMeter addresses
+// J5:
+// Pin 3,4,5 - Module addresses
+// Pin 6 - Audio response
+// Pin 7 - Freq/Capacitance selection
 
 // Set a range manually
 // Sets digital pins 2, 3 and 4 on J7 to output the desired range, in 3 bit encoding.

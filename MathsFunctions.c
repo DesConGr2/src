@@ -7,7 +7,7 @@
 //	return returnVal;
 //---------------------------------------------------------//
 
-double range1m(uint32_t ADCValue){
+double voltageRange1m(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	double voltPerBit = 3.318f / 4096.0f;
@@ -18,7 +18,7 @@ double range1m(uint32_t ADCValue){
 	return retVal;
 }
 
-double range10m(uint32_t ADCValue){
+double voltageRange10m(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	double voltPerBit = 3.34f / 4096.0f;
@@ -30,7 +30,7 @@ double range10m(uint32_t ADCValue){
 }
 
 
-double range100m(uint32_t ADCValue){
+double voltageRange100m(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	double voltPerBit = 3.318f / 4096.0f;
@@ -41,7 +41,7 @@ double range100m(uint32_t ADCValue){
 	return retVal;
 }
 
-double range1(uint32_t ADCValue){
+double voltageRange1(uint32_t ADCValue){
 	
 	//uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	// 3.354 Accurate MAX
@@ -55,7 +55,7 @@ double range1(uint32_t ADCValue){
 	return retVal;
 }
 
-double range10(uint32_t ADCValue){
+double voltageRange10(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 //	//
@@ -68,7 +68,7 @@ double range10(uint32_t ADCValue){
 	return retVal;
 }
 
-double range10mAC(uint32_t ADCValue){
+double voltageRange10mAC(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	double voltPerBit = 3.34f / 4096.0f;
@@ -80,7 +80,7 @@ double range10mAC(uint32_t ADCValue){
 }
 
 
-double range100mAC(uint32_t ADCValue){
+double voltageRange100mAC(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	double voltPerBit = 3.318f / 4096.0f;
@@ -91,7 +91,7 @@ double range100mAC(uint32_t ADCValue){
 	return retVal;
 }
 
-double range1AC(uint32_t ADCValue){
+double voltageRange1AC(uint32_t ADCValue){
 	
 	//uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 	// 3.354 Accurate MAX
@@ -105,7 +105,7 @@ double range1AC(uint32_t ADCValue){
 	return retVal;
 }
 
-double range10AC(uint32_t ADCValue){
+double voltageRange10AC(uint32_t ADCValue){
 	
 //	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
 //	//
@@ -249,12 +249,33 @@ double resistanceRange1M(uint32_t ADCValue) {
 	return retVal;
 }	
 
-//double testRange(void){
-//	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-//	//
-//	double voltPerBit = 3.354f / 4096.0f;
-//	//double bitsIn3V = 3.0f / voltPerBit;
-//	double returnVal = (double)value * voltPerBit; 
-//	return returnVal;
-//}
+double capacitanceRangePF(double frequency) {
+	double cap = 0.0;
+
+	cap = 1.0 / (frequency * 0.693 * 1000000);
+
+	return cap;
+}
+double capacitanceRangeNF(double frequency) {
+	double cap = 0.0;
+
+	cap = 1.0 / (frequency * 0.693 * 6000);
+
+	return cap;
+}
+double capacitanceRangeUF(double frequency) {
+	double cap = 0.0;
+
+	cap = 1.0 / (frequency * 0.693 * 60);
+
+	return cap;
+}
+double capacitanceRangeHighUF(double frequency) {
+	double cap = 0.0;
+
+	cap = 1.0 / (frequency * 0.693 * 6);
+
+	return cap;
+}
+
 
