@@ -43,11 +43,11 @@ uint32_t ADC1value (void) {
 	return (ADC1->DR);
 }
 
- double readADC1(void) {
-	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (3.3f / 4096.0f); 
-	return returnVal;
-}
+// double readADC1(void) {
+//	uint32_t value = ADC1value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+//	double returnVal = (double)value * (3.3f / 4096.0f); 
+//	return returnVal;
+//}
 	
 
 /* Function to intiialise ADC2    */
@@ -59,7 +59,7 @@ void ADC2Init(void) {
 	
 	/* ADC12_IN15 is the channel we shall use. It is connected to 
 	 * PC5 which is connected to the board edge connectors */
-	GPIOC->MODER = 0x4 << (2 * 4);
+	GPIOC->MODER = 0x3 << (2 * 5);
 	GPIOC->PUPDR = 0;
 	
 	/* Set ADC to discontinuous conversion mode. */
@@ -91,9 +91,9 @@ uint32_t ADC2value (void) {
 	return (ADC2->DR);
 }
 
- double readADC2(void) {
-	uint32_t value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
-	double returnVal = (double)value * (3.3f / 4096.0f); 
-	return returnVal;
-}
+// double readADC2(void) {
+//	uint32_t value = ADC2value(); 												/* Gets a 12 bit right-aligned value from the ADC */
+//	double returnVal = (double)value * (3.3f / 4096.0f); 
+//	return returnVal;
+//}
 

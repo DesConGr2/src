@@ -3,9 +3,9 @@
 #include "ADC.h"
 
 void turnBuzzerOn(void){
-		setPin(6, 1);
+		setPin("J7", 6, 1);
 }
 
 void turnBuzzerOff(void){
-		setPin(6, 0);
+		setPin("J7", 6, 0);
 }

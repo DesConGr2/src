@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include "STM32F4xx.h"
 #include "ADC.h"
-#include "lcdDisplay.h"
-#include "buttons.h"
 #include "digitalIO.h"
-#include "mathsFunctions.h"
-#include "ranging.h"
+#include "lcdDisplay.h"
 #include "sound_response.h"
+<<<<<<< HEAD
 #include "DataLog.h"
 #include "Diode.h"
 #include "TransistorFunction.h"
@@ -52,17 +50,23 @@ int main (void) {
 	//initialise
 	initButtons();
 	initDisplay();
+=======
+#include "freqCalc.h"
+#include "UI.h"
+#include "serial_comms.h"
+#include "DAC.h"
+
+int main (void) {
+>>>>>>> master
 	initDigitalIO();
+	// TODO: change to 'initADC1()' to be consistent with the other naming
 	ADC1Init();
+	initUI();
 	
-	//Wlecome message (tests screen)
-	turnBuzzerOn();
-	displayType("Welcome!");
-	Delay(1000);
-	displayClear();
-	turnBuzzerOff();
+	initDAC();
 	
 	while(1) {
+<<<<<<< HEAD
 		// Display refresh cycle
 		Delay(200);
 		// Check button press
@@ -77,27 +81,16 @@ int main (void) {
 		// Display settings
 		display(readType, voltageRange, currentRange, resistanceRage, typeIndex, voltageRangeIndex, autoRangeState, datalogMode, log);
 	}		
+=======
+	}
+		
+>>>>>>> master
 }
 
-// Counts 1ms timeTicks
-volatile uint32_t msTicks;
-/*----------------------------------------------------------------------------
-  SysTick_Handler
- *----------------------------------------------------------------------------*/
-void SysTick_Handler(void) {
-  msTicks++;
-}
 
-/*----------------------------------------------------------------------------
-  delays number of tick Systicks (happens every 1 ms)
- *----------------------------------------------------------------------------*/
-void Delay (uint32_t dlyTicks) {                                              
-  uint32_t curTicks;
 
-  curTicks = msTicks;
-  while ((msTicks - curTicks) < dlyTicks);
-}
 
+<<<<<<< HEAD
 /*----------------------------------------------------------------------------//
 // Code to deal with the user interface and the screen refresh rate...				//
 // Multithreading would be ideal but fork() and <sys/types.h> are Os related	//
@@ -273,3 +266,9 @@ void display(char *readType[], double voltageRange[], double currentRange[], dou
 	displayAuto(*autoRangeState);
 	
 }
+=======
+
+
+
+
+>>>>>>> master
