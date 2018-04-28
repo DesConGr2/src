@@ -83,9 +83,9 @@ void initUI(void) {
 	interfaceVals->readType[2] = "Ohm";
 	interfaceVals->readType[3] = "Hz ";
 	interfaceVals->readType[4] = "C  ";
-	interfaceVals->readType[4] = "Continuity";
-	interfaceVals->readType[4] = "Diode";
-	interfaceVals->readType[4] = "Transistor";
+	interfaceVals->readType[5] = "Continuity";
+	interfaceVals->readType[6] = "Diode";
+	interfaceVals->readType[7] = "Transistor";
 	
 	interfaceVals->voltageRange[0] =  "10.0";
 	interfaceVals->voltageRange[1] =   "1.0";
@@ -193,12 +193,15 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 				}
 			} 
 		break;
+		// Toggle the data logging
 		case 8:
-			if(*typeIndex == 6) {
-				clearDatalog();
+			if(*log == 1) {
+				*log = 0;
+				sendDatalog();				
 			} else {
-				sendDatalog();
+				*log = 0;
 			}
+			
 		break;
 	}
 }
@@ -211,7 +214,8 @@ void display(char *readType[],
 			 int typeIndex, 
 			 int rangeIndex, 
 			 int autoRangeState,
-			 int commsState) {	
+			 int commsState) 
+{	
 	
 							 
 	//initilise display value
