@@ -93,6 +93,13 @@ void WriteToOutputString(double output) {
 		free(OutString);
 }
 
+void writeStringAsOutput(char *output) {
+	
+		// JUST SEND IT OMG
+		PB_FTDI_Send(output, 16);
+		PB_FTDI_SendNewLine();
+}
+
 
 void WriteDataLogMessage() {
 	

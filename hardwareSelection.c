@@ -62,7 +62,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range10(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -74,7 +74,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 					
-					if(fabs(range1(ADCValue)) > 1.0) {
+					if(fabs(voltageRange1(ADCValue)) > 1.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -86,7 +86,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range100m(ADCValue)) > 100.0) {
+					if(fabs(voltageRange100m(ADCValue)) > 100.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -98,7 +98,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				
-					if(fabs(range10m(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10m(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -110,7 +110,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range10(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10AC(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -122,7 +122,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				
-					if(fabs(range1(ADCValue)) > 1.0) {
+					if(fabs(voltageRange1AC(ADCValue)) > 1.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -134,7 +134,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range100m(ADCValue)) > 100.0) {
+					if(fabs(voltageRange100mAC(ADCValue)) > 100.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -146,7 +146,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 					
-					if(fabs(range10m(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10mAC(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -359,7 +359,7 @@ int autoRange(int module, int range, double ADCValue){
 			switch(range) {
 				// 10
 				case 0:
-					rangeVal = fabs(range10(ADCValue));
+					rangeVal = fabs(voltageRange10(ADCValue));
 					if(rangeVal > 10.0) {
 						// Buzz for out of range
 						setPin("J5", 8, 1);
@@ -372,7 +372,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 1
 				case 1:
-					rangeVal = fabs(range1(ADCValue));
+					rangeVal = fabs(voltageRange1(ADCValue));
 					if(rangeVal > 1.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
@@ -381,7 +381,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 100m
 				case 2:
-					rangeVal = fabs(range100m(ADCValue));
+					rangeVal = fabs(voltageRange100m(ADCValue));
 					if(rangeVal > 100.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
@@ -390,7 +390,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10m
 				case 3:
-					rangeVal = fabs(range10m(ADCValue));
+					rangeVal = fabs(voltageRange10m(ADCValue));
 					if(rangeVal > 10.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 1.0) {
@@ -403,7 +403,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10 AC
 				case 4:
-					rangeVal = fabs(range10(ADCValue));
+					rangeVal = fabs(voltageRange10AC(ADCValue));
 					if(rangeVal > 10.0) {
 						// Buzz for out of range
 						setPin("J5", 8, 1);
@@ -416,7 +416,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 1 AC
 				case 5:
-					rangeVal = fabs(range1(ADCValue));
+					rangeVal = fabs(voltageRange1AC(ADCValue));
 					if(rangeVal > 1.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
@@ -425,7 +425,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 100m AC
 				case 6:
-					rangeVal = fabs(range100m(ADCValue));
+					rangeVal = fabs(voltageRange100mAC(ADCValue));
 					if(rangeVal > 100.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
@@ -434,7 +434,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10m AC
 				case 7:
-					rangeVal = fabs(range10m(ADCValue));
+					rangeVal = fabs(voltageRange10mAC(ADCValue));
 					if(rangeVal > 10.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 1.0) {

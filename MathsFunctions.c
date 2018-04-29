@@ -216,7 +216,7 @@ double resistanceRange50k(uint32_t ADCValue) {
 	double bitsIn3V = 3.0f / voltPerBit;
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.08)) / 0.000264);
-	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513))
+	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513));
 	double retVal = (5133.4)*x*x + (14989.0)*x + (652.75);
 	
 	return retVal;
@@ -227,7 +227,7 @@ double resistanceRange100k(uint32_t ADCValue) {
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.165)) / 0.0000238);
 	//double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.49533)) / 0.00000976);
-	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513))
+	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513));
 	double retVal = (59671.0)*x*x - (42661.0*x) + (35090.0);
 	
 	return retVal;
@@ -238,7 +238,7 @@ double resistanceRange500k(uint32_t ADCValue) {
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.19272)) / 0.0000034903);
 	//double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.27579)) / 0.00000045463);
-	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513))
+	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513));
 	double retVal = (66852000.0)*x*x*x - (67366000 *x*x) + (23514000.0)*x - (2685300.0);
 
 	return retVal;
@@ -249,7 +249,7 @@ double resistanceRange1M(uint32_t ADCValue) {
 	
 	//double retVal = ((((double)ADCValue * voltPerBit) - (0.49)) / 0.0000009);
 	//double retVal = ((((((double)ADCValue * voltPerBit) - 1.613) / (0.1513)) -  (0.000000042)) / 0.22183);
-	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513))
+	double x = ((((double)ADCValue * voltPerBit) - 1.613) / (0.1513));
 	double retVal = (572340000.0)*x*x - (265220000.0 *x) + (31166000.0);
 	
 	return retVal;

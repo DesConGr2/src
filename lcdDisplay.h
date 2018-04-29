@@ -14,6 +14,7 @@ void displayClear(void);
 void displayRange(double value);
 void displayAuto(int toggle);
 void displayComms(int toggle);
+void displayLogging(int toggle);
 
 void displayV(void);
 void displaymV(void);
@@ -28,5 +29,7 @@ void displayMHz(void);
 void displaypF(void);
 void displaynF(void);
 void displayuF(void);
+void displayForward(void);
+void displayReverse(void);
 
 #endif
