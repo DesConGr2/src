@@ -552,7 +552,7 @@ void display(char *readType[],
 		break;
 		// Diode
 		case 6:
-			if(displayDiode(ADCAverage) == -1) {
+			if(displayDiode(voltageRange1(ADCAverage)) == -1) {
 				displayReverse();
 			} else {
 				displayForward();
@@ -560,10 +560,10 @@ void display(char *readType[],
 		break;
 		// Transistor
 		case 7:
-			if(displayTransistor(ADCAverage) < 0) {
-				//displayReading((double)"PNP");
+			if(displayTransistor(voltageRange1(ADCAverage)) > 0) {
+				displayNPN();
 			} else {
-				//displayReading((double)"NPN");
+				displayPNP();
 			}
 		break;
 	}
