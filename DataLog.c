@@ -111,6 +111,8 @@ void clearDatalog(void){
 
 void sendDatalog(void){
 	
+	WriteDataLogMessage();
+	
 	char* output = malloc(sizeof(double) + sizeof(char)*4);		 													
 			
 	for(int i = 0; i >= position; i++){
