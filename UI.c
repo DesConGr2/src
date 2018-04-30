@@ -41,11 +41,11 @@ typedef struct UIVals {
 UIVals *interfaceVals;
 const int MAXINDEX[8] = {7, 3, 6, 0, 3, 0, 0, 0};
 
-uint32_t ADCValues[50] = {0};
+uint32_t ADCValues[50] = {0.0};
 uint32_t ADCAverage = 0;
 int ADCSampleCount = 50;
 
-uint32_t freqValues[20] = {0};
+double freqValues[20] = {0.0};
 double freqAverage = 0;
 int freqSampleCount = 20;
 
