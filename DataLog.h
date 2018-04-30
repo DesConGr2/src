@@ -3,7 +3,7 @@
 
 void clearDatalog(void);
 
-void datalogButton(double value, int range, char *type);
+void addToDatalog(double value, int range, char *type);
 
 void cycleDatalogDown(void);
 

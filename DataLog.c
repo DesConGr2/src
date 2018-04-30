@@ -11,9 +11,10 @@ int position;
 int sizeOfDatalog;
 int check;
 int x;
-double *DatalogValue;
-char *DatalogType;
-int *DatalogRange;
+double DatalogValue[20];
+char *DatalogType[20];
+char DatalogRange[20];
+//char Datalog[20]; 
 
 //Issues so far:
 //Why not implement it using an array? you seem to be randomly allocating memory and never deallocating it
@@ -39,43 +40,28 @@ void addToDatalog(double value, int range, char *type){
 	 if(position >= sizeOfDatalog-1){
 		position = 1;
 		DatalogValue[position] = value;
- 		DatalogType[position] = *type;
+ 		DatalogType[position] = type;
 		DatalogRange[position] = range;
+		//char* value = (char *)malloc(sizeof(char));
+		
+		 
 		position++;
 	 } else {
 		 DatalogValue[position] = value;
 		 DatalogRange[position] = range;
-		 DatalogType[position] = *type;
+		 DatalogType[position] = type;
 		 position++;
 	 }
 }
 
-void datalogButton(double value, int range, char *type){
-	if(check == 0){
-		sizeOfDatalog = 20;
-		position = 1;
-		check = 1;
-		x = 0;
-		DatalogValue = (double *)malloc(sizeof(double)*sizeOfDatalog); 
-		DatalogRange = (int *)malloc(sizeof(int)*sizeOfDatalog);
-		DatalogType = (char *)malloc(sizeof(char)*sizeOfDatalog);
-		addToDatalog(value, range, type);
-		
-		//How does this work!!! you end up constantly allocating memory which then will crash the display!
-		//ALWAYS ALWAYS use free() after using malloc!
-		
-	} else {
-		addToDatalog(value, range, type);
-	}
-}
 
-void displayDatalogType(char *string, int range) {
+char displayDatalogType(char *string, int range) {
 	if(1 == range){
-		lcd_write_string("m", 1, 8);
+		return 'm';
 	} else {
-		lcd_write_string(" ", 1, 8);
+		return ' ';
 	}
-	lcd_write_string(string, 1, 9);
+	
 }
 
 
@@ -88,7 +74,9 @@ void cycleDatalogUp(void){
 		char *type = (char *)malloc(sizeof(char));
 		x++;
 		//displayReading(DatalogValue[x]);  
-		*type = DatalogType[x];
+		
+		//*type = DatalogType[x];
+		
 		//displayDatalogType(type, DatalogRange[x]);
 		free(type);
 		
@@ -103,7 +91,9 @@ void cycleDatalogDown(void){
 		x--;
 		//displayReading(DatalogValue[x]);
 		char *type = (char *)malloc(sizeof(char));
-		*type = DatalogType[x];
+		
+		//*type = DatalogType[x];
+		
 		//displayDatalogType(type, DatalogRange[x]);
 		free(type);
 		
@@ -117,16 +107,20 @@ void clearDatalog(void){
 	check = 0;
 	x = 0;
 	position = 0; 
-	//lcd_write_string("claer", 1, 7);
 }
 
 void sendDatalog(void){
+	
+	char* output = malloc(sizeof(double) + sizeof(char)*4);		 													
+			
 	for(int i = 0; i >= position; i++){
-		 WriteToOutputString(DatalogValue[i]);
+		//sprintf(output, "%f%c%s", DatalogValue[i], DatalogRange[i], DatalogType[i]);
+		sprintf(output, "%f%s", DatalogValue[i], DatalogType[i]);
+		writeStringAsOutput(output);
 	}
+	free(output);
 }
 
 void displayDatalogValueClear(void) {
-	//lcd_write_string("               ", 1, 0);
 }
 
