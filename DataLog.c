@@ -8,7 +8,7 @@
 #include "serial_comms.h"
 
 int position;
-int sizeOfDatalog;
+int sizeOfDatalog = 20;
 int check;
 int x;
 double DatalogValue[20];
@@ -35,35 +35,38 @@ char DatalogRange[20];
 //We have no more room on the display now that hardware have requested we show the reading type on the bottom line
 //The only way to show this works will be using serial comms, or setting up a completely new mode on the board
 //Both are very achievable on monday morning, just let's get working on it!
-
-void addToDatalog(double value, int range, char *type){
-	 if(position == sizeOfDatalog-1){
-		position = 0;
-		DatalogValue[position] = value;
- 		DatalogType[position] = type;
-		DatalogRange[position] = range;
-		//char* value = (char *)malloc(sizeof(char));
-		
-		 
-		position++;
-	 } else {
-		 DatalogValue[position] = value;
-		 DatalogRange[position] = range;
-		 DatalogType[position] = type;
-		 position++;
-	 }
-}
-
-
-char displayDatalogType(char *string, int range) {
+char displayDatalogRange(int range) {
 	if(1 == range){
 		return 'm';
-	} else {
+	} else if(2 == range){
+		return 'k';
+	} else if(3 == range){
+		return 'p';
+	} else if(4 == range){
+		return 'n';
+	} else if(5 == range){
+		return 'u';
+	}else{
 		return ' ';
 	}
 	
 }
 
+void addToDatalog(double value, int range, char *type){
+	 if(position >= sizeOfDatalog-1){
+		position = 1;
+		DatalogValue[position] = value;
+ 		DatalogType[position] = type;
+		DatalogRange[position] = displayDatalogRange(range);
+		//char* value = (char *)malloc(sizeof(char));
+		position++;
+	 } else {
+		 DatalogValue[position] = value;
+		 DatalogType[position] = type;
+		 DatalogRange[position] = displayDatalogRange(range);
+		 position++;
+	 }
+}
 
 void cycleDatalogUp(void){
 	
@@ -116,13 +119,10 @@ void sendDatalog(void){
 	char* output = malloc(sizeof(double) + sizeof(char)*4);		 													
 			
 	for(int i = 0; i < 20; i++){
-		//sprintf(output, "%f%c%s", DatalogValue[i], DatalogRange[i], DatalogType[i]);
-		sprintf(output, "%f%s", DatalogValue[i], DatalogType[i]);
+		sprintf(output, "%f%c%s", DatalogValue[i], DatalogRange[i], DatalogType[i]);
+		//sprintf(output, "%f%s", DatalogValue[i], DatalogType[i]);
 		writeStringAsOutput(output);
 	}
 	free(output);
-}
-
-void displayDatalogValueClear(void) {
 }
 

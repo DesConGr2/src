@@ -11,6 +11,4 @@ void cycleDatalogUp(void);
 
 void sendDatalog(void);
 
-void displayDatalogValueClear(void);
-	
 #endif
