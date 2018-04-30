@@ -27,11 +27,14 @@ void setModule(int module) {
 		break;
 		// Frequency
 		case 3:
-			setPin("J5", 15, 0);
+			//setPin("J5", 15, 0);
+		
+			setPin("J5", 4, 0);
 		break;
 		// Capacitance
 		case 4:
-			setPin("J5", 15, 1);
+			//setPin("J5", 15, 1);
+			setPin("J5", 4, 1);
 		break;
 		// Diode
 		case 6:
@@ -301,32 +304,33 @@ void setRange(int module, int range, double ADCValue) {
 			}
 		break;
 		// Frequency
-		case 3:
-			setPin("J5", 15, 0);	
+		case 3:			
+			//Bodge
+			setPin("J7", 3, 1);
+			setPin("J7", 4, 1);
+			setPin("J7", 5, 0);		
 		break;
 		// Capacitance
 		case 4:
-			setPin("J5", 15, 1);
-
 			switch(range) {
 				case 0:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 0);
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				break;
 				case 1:
-					setPin("J7", 3, 0);
-					setPin("J7", 4, 1);
-					setPin("J7", 5, 0);
-				break;
-				case 2:
 					setPin("J7", 3, 1);
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
-				case 3:
-					setPin("J7", 3, 1);
+				case 2:
+					setPin("J7", 3, 0);
 					setPin("J7", 4, 1);
+					setPin("J7", 5, 0);
+				break;
+				case 3:
+					setPin("J7", 3, 0);
+					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				break;
 			}

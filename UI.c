@@ -41,9 +41,13 @@ typedef struct UIVals {
 UIVals *interfaceVals;
 const int MAXINDEX[8] = {7, 3, 6, 0, 3, 0, 0, 0};
 
-uint32_t ADCValues[50] = {0.0};
+uint32_t ADCValues[50] = {0};
 uint32_t ADCAverage = 0;
 int ADCSampleCount = 50;
+
+uint32_t freqValues[20] = {0};
+double freqAverage = 0;
+int freqSampleCount = 20;
 
 int logging;
 int datalogMode;
@@ -493,7 +497,7 @@ void display(char *readType[],
 		break;
 		//Frequency
 		case 3:					
-			displayVal = (double)84000000 / (double)TIM3->CCR1;
+			displayVal = freqAverage;
 			displayReading(displayVal);
 			if(logging == 1){
 				datalogButton(displayVal, 1 ,readType[typeIndex] );
@@ -507,8 +511,9 @@ void display(char *readType[],
 			switch(rangeIndex) {
 				// pF
 				case 0:
-					displayVal = capacitanceRangePF((double)84000000 / (double)TIM3->CCR1);
+					displayVal = capacitanceRangePF(freqAverage);
 					displayReading(displayVal);
+					void displaypF(void);
 					if(logging == 1){
 						datalogButton(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
@@ -516,8 +521,9 @@ void display(char *readType[],
 				break;
 				// nF
 				case 1:
-					displayVal = capacitanceRangeNF((double)84000000 / (double)TIM3->CCR1);
+					displayVal = capacitanceRangeNF(freqAverage);
 					displayReading(displayVal);
+					void displaynF(void);
 					if(logging == 1){
 						datalogButton(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
@@ -525,8 +531,9 @@ void display(char *readType[],
 				break;
 				// uF
 				case 2:
-					displayVal = capacitanceRangeUF((double)84000000 / (double)TIM3->CCR1);
+					displayVal = capacitanceRangeUF(freqAverage);
 					displayReading(displayVal);
+					void displayuF(void);
 					if(logging == 1){
 						datalogButton(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
@@ -534,8 +541,9 @@ void display(char *readType[],
 				break;
 				// High uF
 				case 3:
-					displayVal = capacitanceRangeHighUF((double)84000000 / (double)TIM3->CCR1);
+					displayVal = capacitanceRangeHighUF(freqAverage);
 					displayReading(displayVal);
+					void displayuF(void);
 					if(logging == 1){
 						datalogButton(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
@@ -586,6 +594,23 @@ void TIM5_IRQHandler(void) {
 	}
 	
 	ADCAverage /= (double)ADCSampleCount;
+	
+	freqAverage = 0.0;
+	
+	// Poll the ADC
+	double freqValue = (double)84000000 / (double)TIM3->CCR1;
+	// Add the value to the averages
+	for(int i = 0; i < freqSampleCount; i++) {
+		if(i != freqSampleCount - 1) {
+			freqValues[i] = freqValues[i + 1]; 
+		} else {			
+			freqValues[i] = freqValue;
+		}
+		
+		freqAverage += freqValues[i];
+	}
+	
+	freqAverage /= (double)freqSampleCount;
 	
 	setModule(interfaceVals->typeIndex);
 

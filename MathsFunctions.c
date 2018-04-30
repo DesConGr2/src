@@ -258,28 +258,28 @@ double resistanceRange1M(uint32_t ADCValue) {
 double capacitanceRangePF(double frequency) {
 	double cap = 0.0;
 
-	cap = 1.0 / (frequency * 0.693 * 1000000);
+	cap = (1.0 / (frequency * 0.693 * 1000000)) * 1000000000000.0;
 
 	return cap;
 }
 double capacitanceRangeNF(double frequency) {
 	double cap = 0.0;
 
-	cap = 1.0 / (frequency * 0.693 * 6000);
+	cap = (1.0 / (frequency * 0.693 * 6000)) * 1000000000.0;
 
 	return cap;
 }
 double capacitanceRangeUF(double frequency) {
 	double cap = 0.0;
 
-	cap = 1.0 / (frequency * 0.693 * 60);
+	cap = (1.0 / (frequency * 0.693 * 60)) * 1000000.0;
 
 	return cap;
 }
 double capacitanceRangeHighUF(double frequency) {
 	double cap = 0.0;
 
-	cap = 1.0 / (frequency * 0.693 * 6);
+	cap = (1.0 / (frequency * 0.693 * 6)) * 1000000.0;
 
 	return cap;
 }
