@@ -37,8 +37,8 @@ char DatalogRange[20];
 //Both are very achievable on monday morning, just let's get working on it!
 
 void addToDatalog(double value, int range, char *type){
-	 if(position >= sizeOfDatalog-1){
-		position = 1;
+	 if(position == sizeOfDatalog-1){
+		position = 0;
 		DatalogValue[position] = value;
  		DatalogType[position] = type;
 		DatalogRange[position] = range;
@@ -115,7 +115,7 @@ void sendDatalog(void){
 	
 	char* output = malloc(sizeof(double) + sizeof(char)*4);		 													
 			
-	for(int i = 0; i >= position; i++){
+	for(int i = 0; i < 20; i++){
 		//sprintf(output, "%f%c%s", DatalogValue[i], DatalogRange[i], DatalogType[i]);
 		sprintf(output, "%f%s", DatalogValue[i], DatalogType[i]);
 		writeStringAsOutput(output);

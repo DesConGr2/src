@@ -44,6 +44,8 @@
 // Pin 6 - Audio response
 // Pin 7 - Freq/Capacitance selection
 
+// Bodge J5 : 3 - 0 for freq, 1 for cap
+
 // Set a range manually
 // Sets digital pins 2, 3 and 4 on J7 to output the desired range, in 3 bit encoding.
 // Pin 2 is the MSB and pin 4 is the LSB
