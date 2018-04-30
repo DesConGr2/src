@@ -107,7 +107,7 @@ void initUI(void) {
 	interfaceVals->currentRange[2] = "0.01";
 	interfaceVals->currentRange[3] = "0.001";
 
-	interfaceVals->resistanceRange[0] = "1k";
+	interfaceVals->resistanceRange[0] = "1k"; 
 	interfaceVals->resistanceRange[1] = "5k";
 	interfaceVals->resistanceRange[2] = "10k";
 	interfaceVals->resistanceRange[3] = "50k";
@@ -238,7 +238,7 @@ void display(char *readType[],
 					displayVal = voltageRange10(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 0 ,readType[typeIndex] );
 						logging = 0;
 					}								
 					displayV();
@@ -254,7 +254,7 @@ void display(char *readType[],
 					// Display to LCD
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 0 ,readType[typeIndex] );
 						logging = 0;
 					}
 					displayV();
@@ -268,7 +268,7 @@ void display(char *readType[],
 					displayVal = voltageRange100m(ADCAverage);				
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}
 					displaymV();
@@ -281,6 +281,10 @@ void display(char *readType[],
 				case 3:
 					displayVal = voltageRange10m(ADCAverage);
 					displayReading(displayVal);
+					if(logging == 1){
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
+						logging = 0;
+					}
 					displaymV();
 					
 					// Attempt to send via uart
@@ -292,7 +296,7 @@ void display(char *readType[],
 					displayVal = voltageRange10AC(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 0 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displayV();
@@ -306,7 +310,7 @@ void display(char *readType[],
 					displayVal = voltageRange1AC(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 0 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displayV();
@@ -320,7 +324,7 @@ void display(char *readType[],
 					displayVal = voltageRange100mAC(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displaymV();
@@ -334,7 +338,7 @@ void display(char *readType[],
 					displayVal = voltageRange10mAC(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displaymV();
@@ -356,7 +360,7 @@ void display(char *readType[],
 					// Display to LCD
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 0 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displayA();
@@ -371,7 +375,7 @@ void display(char *readType[],
 					// Display to LCD
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displaymA();
@@ -385,7 +389,7 @@ void display(char *readType[],
 					displayVal = currentRange10m(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displaymA();
@@ -399,7 +403,7 @@ void display(char *readType[],
 					displayVal = currentRange1m(ADCAverage);
 					displayReading(displayVal);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 1 ,readType[typeIndex] );
 						logging = 0;
 					}	
 					displaymA();
@@ -421,7 +425,7 @@ void display(char *readType[],
 						displayVal = resistanceRange1k(ADCAverage);
 						displayReading(displayVal);
 						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+							addToDatalog(displayVal, 2 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displayOhm();
@@ -432,7 +436,7 @@ void display(char *readType[],
 						displayVal = resistanceRange5k(ADCAverage);
 						displayReading(displayVal);
 						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+							addToDatalog(displayVal, 2 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -443,7 +447,7 @@ void display(char *readType[],
 						displayVal = resistanceRange10k(ADCAverage);
 						displayReading(displayVal);
 						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+							addToDatalog(displayVal, 2 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -454,7 +458,7 @@ void display(char *readType[],
 						displayVal = resistanceRange50k(ADCAverage);
 						displayReading(displayVal);
 						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+							addToDatalog(displayVal, 2 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -465,7 +469,7 @@ void display(char *readType[],
 						displayVal = resistanceRange100k(ADCAverage);
 						displayReading(displayVal);
 						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+							addToDatalog(displayVal, 2 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -475,8 +479,8 @@ void display(char *readType[],
 					{
 						displayVal = resistanceRange500k(ADCAverage);
 						displayReading(displayVal);
-						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+						if(logging == 2){
+							addToDatalog(displayVal, 1 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -486,8 +490,8 @@ void display(char *readType[],
 					{
 						displayVal = resistanceRange1M(ADCAverage);
 						displayReading(displayVal);
-						if(logging == 1){
-							datalogButton(displayVal, 1 ,readType[typeIndex] );
+						if(logging == 2){
+							addToDatalog(displayVal, 1 ,readType[typeIndex] );
 							logging = 0;
 						}	
 						displaykOhm();
@@ -500,7 +504,7 @@ void display(char *readType[],
 			displayVal = freqAverage;
 			displayReading(displayVal);
 			if(logging == 1){
-				datalogButton(displayVal, 1 ,readType[typeIndex] );
+				addToDatalog(displayVal, 0 ,readType[typeIndex] );
 				logging = 0;
 			}	
 		break;
@@ -515,7 +519,7 @@ void display(char *readType[],
 					displayReading(displayVal);
 					void displaypF(void);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 3 ,readType[typeIndex] );
 						logging = 0;
 					}	
 				break;
@@ -525,7 +529,7 @@ void display(char *readType[],
 					displayReading(displayVal);
 					void displaynF(void);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 4 ,readType[typeIndex] );
 						logging = 0;
 					}
 				break;
@@ -535,7 +539,7 @@ void display(char *readType[],
 					displayReading(displayVal);
 					void displayuF(void);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 5 ,readType[typeIndex] );
 						logging = 0;
 					}
 				break;
@@ -545,7 +549,7 @@ void display(char *readType[],
 					displayReading(displayVal);
 					void displayuF(void);
 					if(logging == 1){
-						datalogButton(displayVal, 1 ,readType[typeIndex] );
+						addToDatalog(displayVal, 5 ,readType[typeIndex] );
 						logging = 0;
 					}
 				break;
@@ -556,7 +560,7 @@ void display(char *readType[],
 		break;
 		// Diode
 		case 6:
-			if(displayDiode(ADCAverage) == -1) {
+			if(displayDiode(voltageRange1(ADCAverage)) == -1) {
 				displayReverse();
 			} else {
 				displayForward();
@@ -564,10 +568,10 @@ void display(char *readType[],
 		break;
 		// Transistor
 		case 7:
-			if(displayTransistor(ADCAverage) < 0) {
-				//displayReading((double)"PNP");
+			if(displayTransistor(voltageRange1(ADCAverage)) > 0) {
+				displayNPN();
 			} else {
-				//displayReading((double)"NPN");
+				displayPNP();
 			}
 		break;
 	}

@@ -4,12 +4,12 @@
 #include <stdio.h>
 
 int displayDiode(double value){
-	if(value >= 1.5) {
+	if(value >= 0) {
 		 //displayForward();
-		return 1;
-	} else if(1.5 >= value){
-		 //displayReverse();
 		return -1;
+	} else if(0 > value){
+		 //displayReverse();
+		return 1;
 	} else {
 		return 0;
 	}

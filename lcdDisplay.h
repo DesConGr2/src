@@ -31,5 +31,7 @@ void displaynF(void);
 void displayuF(void);
 void displayForward(void);
 void displayReverse(void);
+void displayPNP(void);
+void displayNPN(void);
 
 #endif

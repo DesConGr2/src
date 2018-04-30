@@ -155,11 +155,22 @@ void displayuF(void) {
 }
 
 void displayForward(void) {
-	lcd_write_string("Forward", 1, 0);
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("Forward Bias PN", 1, 0);
 }
 
 void displayReverse(void) {
-	lcd_write_string("Reverse", 1, 0);
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("Reverse Bias NP", 1, 0);
 }
 
+void displayPNP(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("PNP", 1, 13);
+}
+
+void displayNPN(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("NPN", 1, 13);
+}
 
