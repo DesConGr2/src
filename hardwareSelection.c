@@ -216,6 +216,8 @@ void setRange(int module, int range, double ADCValue) {
 			setPin("J7", 3, 0);
 			setPin("J7", 4, 1);
 			setPin("J7", 5, 1);
+		
+			setPin("J5", 8, 0);
 			switch(range) {
 				// 1k
 				case 0:
@@ -224,9 +226,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(2.2);
 				
 					if(resistanceRange1k(ADCValue) > 1000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 5k
@@ -236,9 +238,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(1.9);
 				
 					if(resistanceRange5k(ADCValue) > 5000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 10k
@@ -248,9 +250,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(2.2);
 				
 					if(resistanceRange10k(ADCValue) > 10000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 50k
@@ -260,9 +262,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(1.9);
 				
 					if(resistanceRange50k(ADCValue) > 50000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 100k
@@ -272,9 +274,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(2.2);
 				
 					if(resistanceRange100k(ADCValue) > 100000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 500k
@@ -284,9 +286,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(1.9);
 				
 					if(resistanceRange500k(ADCValue) > 500000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 				// 1M
@@ -296,9 +298,9 @@ void setRange(int module, int range, double ADCValue) {
 					setDAC(2.2);
 				
 					if(resistanceRange1M(ADCValue) > 1000000) {
-						setPin("J5", 8, 1);
+						//setPin("J5", 8, 1);
 					} else {
-						setPin("J5", 8, 0);
+						//setPin("J5", 8, 0);
 					}
 				break;
 			}
@@ -309,9 +311,12 @@ void setRange(int module, int range, double ADCValue) {
 			setPin("J7", 3, 1);
 			setPin("J7", 4, 1);
 			setPin("J7", 5, 0);		
+		
+			setPin("J5", 8, 0);
 		break;
 		// Capacitance
 		case 4:
+			setPin("J5", 8, 0);
 			switch(range) {
 				case 0:
 					setPin("J7", 3, 1);
@@ -345,11 +350,19 @@ void setRange(int module, int range, double ADCValue) {
 			setPin("J7", 7, 0);
 			setDAC(2.2);
 		
-			if(resistanceRange1k(ADCValue) < 100) {
+			if(resistanceRange1k(ADCValue) < 50.0) {
 				setPin("J5", 8, 1);
 			} else {
 				setPin("J5", 8, 0);
 			}
+		break;
+		// Diode
+		case 6:
+			setPin("J5", 8, 0);
+		break;
+		// Transistor
+		case 7:
+			setPin("J5", 8, 0);
 		break;
 	}
 }
@@ -381,6 +394,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 100m
@@ -390,6 +405,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 10m
@@ -425,6 +442,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 100m AC
@@ -434,6 +453,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 10m AC
@@ -474,6 +495,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 10m
@@ -483,6 +506,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal < 1.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 1m
@@ -523,6 +548,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal > 5000) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 10k
@@ -532,6 +559,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal > 10000.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 50k
@@ -541,6 +570,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal > 50000.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 100k
@@ -550,6 +581,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal > 100000.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 500k
@@ -559,6 +592,8 @@ int autoRange(int module, int range, double ADCValue){
 						retRange = range - 1;
 					} else if(rangeVal > 500000.0) {
 						retRange = range + 1;
+					} else {
+						retRange = range;
 					}
 				break;
 				// 1M
