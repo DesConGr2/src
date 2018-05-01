@@ -197,12 +197,7 @@ void processButtonPress(int buttonPressed, int* typeIndex, int* rangeIndex, int*
 		break;
 		// Send data log
 		case 8:
-			if(logging == 1) {
-				logging = 0;
 				sendDatalog();				
-			} else {
-				logging = 0;
-			}
 			
 		break;
 	}
