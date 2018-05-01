@@ -5,6 +5,7 @@
 #include "digitalIO.h"
 #include "lcdDisplay.h"
 #include "sound_response.h"
+
 #include "freqCalc.h"
 #include "UI.h"
 #include "serial_comms.h"
@@ -18,15 +19,5 @@ int main (void) {
 	
 	initDAC();
 	
-	while(1) {
-	}
-		
+	while(1) {}		
 }
-
-
-
-
-
-
-
-

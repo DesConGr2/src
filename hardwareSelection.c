@@ -27,18 +27,26 @@ void setModule(int module) {
 		break;
 		// Frequency
 		case 3:
-			setPin("J5", 15, 0);
+			//setPin("J5", 15, 0);
+		
+			setPin("J5", 4, 0);
 		break;
 		// Capacitance
 		case 4:
-			setPin("J5", 15, 1);
-		//add more code here please
+			//setPin("J5", 15, 1);
+			setPin("J5", 4, 1);
 		break;
 		// Diode
 		case 6:
-		setPin("J5", 4, 0);
-		setPin("J5", 5, 1);
-		setPin("J5", 7, 1);
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 1);
+			setPin("J5", 7, 1);
+		break;
+		// Transistor
+		case 7:
+			setPin("J5", 4, 0);
+			setPin("J5", 5, 1);
+			setPin("J5", 7, 1);
 		break;
 	}
 }
@@ -57,7 +65,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range10(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -69,7 +77,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 					
-					if(fabs(range1(ADCValue)) > 1.0) {
+					if(fabs(voltageRange1(ADCValue)) > 1.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -81,7 +89,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range100m(ADCValue)) > 100.0) {
+					if(fabs(voltageRange100m(ADCValue)) > 100.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -93,7 +101,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 				
-					if(fabs(range10m(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10m(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -105,7 +113,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range10(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10AC(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -117,7 +125,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 1);
 					setPin("J7", 5, 0);
 				
-					if(fabs(range1(ADCValue)) > 1.0) {
+					if(fabs(voltageRange1AC(ADCValue)) > 1.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -129,7 +137,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 1);
 				
-					if(fabs(range100m(ADCValue)) > 100.0) {
+					if(fabs(voltageRange100mAC(ADCValue)) > 100.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -141,7 +149,7 @@ void setRange(int module, int range, double ADCValue) {
 					setPin("J7", 4, 0);
 					setPin("J7", 5, 0);
 					
-					if(fabs(range10m(ADCValue)) > 10.0) {
+					if(fabs(voltageRange10mAC(ADCValue)) > 10.0) {
 						setPin("J5", 8, 1);
 					} else {
 						setPin("J5", 8, 0);
@@ -296,10 +304,36 @@ void setRange(int module, int range, double ADCValue) {
 			}
 		break;
 		// Frequency
-		case 3:
+		case 3:			
+			//Bodge
+			setPin("J7", 3, 1);
+			setPin("J7", 4, 1);
+			setPin("J7", 5, 0);		
 		break;
 		// Capacitance
 		case 4:
+			switch(range) {
+				case 0:
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 0);
+				break;
+				case 1:
+					setPin("J7", 3, 1);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;
+				case 2:
+					setPin("J7", 3, 0);
+					setPin("J7", 4, 1);
+					setPin("J7", 5, 0);
+				break;
+				case 3:
+					setPin("J7", 3, 0);
+					setPin("J7", 4, 0);
+					setPin("J7", 5, 0);
+				break;
+			}
 		break;
 		// Continuity
 		case 5:
@@ -319,40 +353,7 @@ void setRange(int module, int range, double ADCValue) {
 		break;
 	}
 }
-
-// NOTE currently only ranges down
-//int autoRange(int range) {	
-//	// @Warning: there might be an issue to do with the speed that this while loop works at, the hardware may
-//	// not be able to keep up. A delay might need to be included.
-//	while((range >= 0) && (range <= 4)) {
-//		// Check the ADC1 value, see if it fits into the range and if not set the range down
-//		// This might change based on the way we deal with each pass of reads, might have all the reads
-//		// in one place and just reference the read value here
-//		int val = readADC1();
-//		
-//		// @Hardcode: current max/min ADC values
-//		if(val < 0.3) {
-//			(range)--;	
-//			setRange(range);
-//		}	else if(val > 3.1) {
-//			(range)++;
-//			setRange(range);
-//		}
-//	}
-//	
-//	// A good thing to do here might be to leave these values as "Out of Range" and display something 
-//	// to notify the user that the measurment is out of range??
-//	if(range < 0) {
-//		range = 0;
-//	}
-//	if(range > 4) {
-//		range = 4;
-//	}
-//	return range;
-//}
-
-//int autoRange(int module, int range){ return 0;}
-
+	
 int autoRange(int module, int range, double ADCValue){ 
 	int retRange = 0;
 	double rangeVal = 0.0;
@@ -362,7 +363,7 @@ int autoRange(int module, int range, double ADCValue){
 			switch(range) {
 				// 10
 				case 0:
-					rangeVal = fabs(range10(ADCValue));
+					rangeVal = fabs(voltageRange10(ADCValue));
 					if(rangeVal > 10.0) {
 						// Buzz for out of range
 						setPin("J5", 8, 1);
@@ -375,7 +376,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 1
 				case 1:
-					rangeVal = fabs(range1(ADCValue));
+					rangeVal = fabs(voltageRange1(ADCValue));
 					if(rangeVal > 1.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
@@ -384,7 +385,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 100m
 				case 2:
-					rangeVal = fabs(range100m(ADCValue));
+					rangeVal = fabs(voltageRange100m(ADCValue));
 					if(rangeVal > 100.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
@@ -393,7 +394,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10m
 				case 3:
-					rangeVal = fabs(range10m(ADCValue));
+					rangeVal = fabs(voltageRange10m(ADCValue));
 					if(rangeVal > 10.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 1.0) {
@@ -406,7 +407,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10 AC
 				case 4:
-					rangeVal = fabs(range10(ADCValue));
+					rangeVal = fabs(voltageRange10AC(ADCValue));
 					if(rangeVal > 10.0) {
 						// Buzz for out of range
 						setPin("J5", 8, 1);
@@ -419,7 +420,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 1 AC
 				case 5:
-					rangeVal = fabs(range1(ADCValue));
+					rangeVal = fabs(voltageRange1AC(ADCValue));
 					if(rangeVal > 1.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 0.1) {
@@ -428,7 +429,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 100m AC
 				case 6:
-					rangeVal = fabs(range100m(ADCValue));
+					rangeVal = fabs(voltageRange100mAC(ADCValue));
 					if(rangeVal > 100.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 10.0) {
@@ -437,7 +438,7 @@ int autoRange(int module, int range, double ADCValue){
 				break;
 				// 10m AC
 				case 7:
-					rangeVal = fabs(range10m(ADCValue));
+					rangeVal = fabs(voltageRange10mAC(ADCValue));
 					if(rangeVal > 10.0) {
 						retRange = range - 1;
 					} else if(rangeVal < 1.0) {

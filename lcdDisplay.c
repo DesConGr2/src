@@ -29,6 +29,7 @@ void displayStringReading(char *string) {
 	//lcd_clear_display();
 	
 	lcd_write_string(string, 1, 0);
+	//lcd_write_string("         ", 1, 8);
 }
 
 void displayClear(void) {
@@ -92,6 +93,15 @@ void displayComms(int toggle) {
 		}
 }
 
+void displayLogging(int toggle) {
+		//simply display an A if auto ranging is on
+		if(toggle == 1){
+			lcd_write_string("D", 0, 13);
+		} else {
+			lcd_write_string(" ", 0, 13);
+		}
+}
+
 void displayV(void){
 lcd_write_string("V   ", 1, 12);
 }
@@ -144,4 +154,23 @@ void displayuF(void) {
 	lcd_write_string("uF  ", 1, 12);
 }
 
+void displayForward(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("Forward Bias PN", 1, 0);
+}
+
+void displayReverse(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("Reverse Bias NP", 1, 0);
+}
+
+void displayPNP(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("PNP", 1, 13);
+}
+
+void displayNPN(void) {
+	lcd_write_string("+-", 0, 13);
+	lcd_write_string("NPN", 1, 13);
+}
 
